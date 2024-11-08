@@ -15,16 +15,19 @@
 // under the License.
 
 import ballerina/test;
-import ballerina/os;
+//import ballerina/os;
+import ballerina/log;
 import ballerina/http;
 
-configurable boolean isLiveServer = os:getEnv("IS_LIVE_SERVER") == "true";
-configurable string serviceUrl = isLiveServer ? os:getEnv("SERVICE_URL") : "http://localhost:9090";
-configurable string token = isLiveServer ? os:getEnv("JIRA_TOKEN") : "test";
-configurable string username = isLiveServer ? os:getEnv("JIRA_USERNAME") : "test@example.com";
+//configurable boolean isLiveServer = os:getEnv("IS_LIVE_SERVER") == "true";
+configurable boolean isLiveServer = true;
+configurable string serviceUrl = isLiveServer ? "https://mohamedansak.atlassian.net" : "http://localhost:9090";
+//configurable string token = isLiveServer ? os:getEnv("JIRA_TOKEN") : "test";
+configurable string token = "ATATT3xFfGF0J-gMHkzurh1-YbGBkELQsjv4hIIOV3Qeypm01gNIgbABQBfgBFy8u2TFuYLfiBDcX06l7W9eb-N9ZctJMuFvVVlHTc6q5GF-c9rKEX6zeH6CKyAEiFKKLGtMQTl8KhGNyBf91TP7t5AyKCCNgKswMGpjK1nkIBdNxFsAuaIHo6M=901C9DE1";
+//configurable string username = isLiveServer ? os:getEnv("JIRA_USERNAME") : "test@example.com";
 ConnectionConfig config = {
     auth: <http:CredentialsConfig>{
-        username: username,
+        username: "mohamedansak@gmail.com",
         password: token
     }
 };
@@ -102,4 +105,71 @@ function testCreateProject() returns error? {
         }
     );
     test:assertNotEquals(response.id,null, msg = "Unsuccessful project creation");
+}
+
+@test:Config {
+    groups: ["live_tests", "mock_tests"]
+}
+function testGetProjectSecurityLevelLive() returns error? {
+    string projectKeyOrId = "EX";  // Specify a valid project key or ID here
+
+    // Call the live API to retrieve the security level details for the project.
+    ProjectIssueSecurityLevels response = check jira->/rest/api/'3/project/[projectKeyOrId]/securitylevel();
+
+    
+
+    // Assertions to verify expected properties in the live response
+    test:assertNotEquals(response.levels.length(), 0, msg = "No security levels found for project.");
+}
+
+@test:Config {
+    groups: ["live_tests", "mock_tests"]
+}
+function testGetApplicationRoles() returns error? {
+    ApplicationRole[] response = check jira->/rest/api/'3/applicationrole();
+
+    // Validate the array is not empty and has expected properties in each item.
+    test:assertNotEquals(response.length(), 0, msg = "Expected non-empty application roles array");
+
+    foreach var role in response {
+        test:assertNotEquals(role.name, "", msg = "Application role name should not be empty");
+        test:assertNotEquals(role.key, "", msg = "Application role key should not be empty");
+    }
+}
+
+@test:Config {
+    groups: ["live_tests", "mock_tests"]
+}
+function testGetSpecificApplicationRole() returns error? {
+    string ProjectKey = "jira-software";
+
+    ApplicationRole response = check jira->/rest/api/'3/applicationrole/[ProjectKey];
+
+    // Assertions
+    test:assertNotEquals(response.key, "", msg = "Expected 'key' to be non-empty");
+    test:assertNotEquals(response.name, "", msg = "Expected 'name' to be non-empty");
+    test:assertEquals(response.key, "jira-software", msg = "Expected key to be 'jira-software'");
+    test:assertEquals(response.name, "Jira Software", msg = "Expected name to be 'Jira Software'");
+}
+
+@test:Config {
+    groups: ["live_tests", "mock_tests"]
+}
+function testGetAuditRecords() returns error? {
+    // Call the function without any query parameters
+    AuditRecords response = check jira->/rest/api/'3/auditing/'record();
+    log:printInfo("Audit Records Response: " + response.toJsonString());
+    // Assertions
+   test:assertNotEquals(response.records,null, msg = "Expected 'records' array to be non-empty");
+}
+
+@test:Config {
+    groups: ["live_tests", "mock_tests"]
+}
+function testGetClassificationLevels() returns error? {
+    // Invoke the function without query parameters.
+    DataClassificationLevelsBean response = check jira->/rest/api/'3/classification\-levels();
+
+    // Check the response status code for both live and mock tests
+    test:assertTrue(response?.classifications is json[], msg = "Expected 'classifications' key to be present in the response.");
 }

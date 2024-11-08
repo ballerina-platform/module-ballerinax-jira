@@ -1637,14 +1637,15 @@ public type GetAllIssueFieldOptionsQueries record {
 
 # Container for a list of audit records.
 public type AuditRecords record {|
-    # The requested or default limit on the number of audit items to be returned.
-    int:Signed32 'limit?;
     # The number of audit items skipped before the first item in this list.
     int:Signed32 offset?;
-    # The list of audit items.
-    AuditRecordBean[] records?;
+    # The requested or default limit on the number of audit items to be returned.
+    int:Signed32 'limit?;
     # The total number of audit items returned.
     int total?;
+    # The list of audit items.
+    AuditRecordBean[] records?;
+    
 |};
 
 # List of permission grants.
@@ -8203,6 +8204,8 @@ public type JiraExpressionEvaluationMetaDataBean record {|
 public type AuditRecordBean record {|
     # The list of items associated with the changed record.
     AssociatedItemBean[] associatedItems?;
+    # The account ID of the author.
+    string authorAccountId?;
     # Deprecated, use `authorAccountId` instead. The key of the user who created the audit record.
     string authorKey?;
     # The category of the audit record. For a list of these categories, see the help article [Auditing in Jira applications](https://confluence.atlassian.com/x/noXKM).
@@ -8217,6 +8220,7 @@ public type AuditRecordBean record {|
     string eventSource?;
     # The ID of the audit record.
     int id?;
+    # The object item associated with the audit record.
     AssociatedItemBean objectItem?;
     # The URL of the computer where the creation of the audit record was initiated.
     string remoteAddress?;
