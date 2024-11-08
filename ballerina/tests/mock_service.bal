@@ -123,12 +123,10 @@ service / on httpListener {
         json mockResponse = {
             "records": [
                 {
-                    "id": "1001",
+                    "id": 1001,
                     "summary": "User logged in",
                     "created": "2023-10-25T12:34:56.000Z",
-                    "category": "authentication",
-                    "eventSource": "Jira",
-                    "eventType": "user_logged_in"
+                    "category": "authentication"
                 }
             ]
         };
@@ -143,4 +141,168 @@ service / on httpListener {
         check caller->respond(mockResponse);
     }
 
+     resource function get rest/api/'3/dashboard(http:Caller caller, http:Request req) returns error? {
+        // Mock response mimicking the structure of PageOfDashboards
+        json mockResponse = {
+            "dashboards": []
+        };
+        check caller->respond(mockResponse);
+    }
+
+    resource function post rest/api/'3/dashboard(http:Caller caller, http:Request req) returns error? {
+        // Mock response body mimicking the actual API response
+        json mockResponse = {
+            "name": "Auditors dashboard",
+            "id":"10001",
+            "description": "A dashboard to help auditors identify sample of issues to check.",
+            "sharePermissions": [],
+            "editPermissions": []
+        };
+        check caller->respond(mockResponse);
+    }
+
+    resource function get rest/api/'3/filter/defaultShareScope(http:Caller caller, http:Request req) returns error? {
+        // Mock response with a default share scope
+        json mockResponse = {
+            "scope": "GLOBAL"
+        };
+
+        // Send the mock response
+        check caller->respond(mockResponse);
+    }
+
+    resource function put rest/api/'3/filter/defaultShareScope(http:Caller caller, http:Request req) returns error? {
+
+        // Mock response, echoing the request scope value
+        json mockResponse = {
+            "scope":"AUTHENTICATED"
+        };
+
+        // Send the mock response
+        check caller->respond(mockResponse);
+    }
+
+    resource function get rest/api/'3/filter/favourite(http:Caller caller, http:Request req) returns error? {
+        // Mock response with an array of Filter objects
+        json mockResponse = [
+            {
+                "id": "10000",
+                "name": "My Favorite Filter",
+                "description": "This is a mock description for the favorite filter."
+            },
+            {
+                "id": "10001",
+                "name": "Another Favorite Filter",
+                "description": "Description for another favorite filter."
+            }
+        ];
+
+        // Send the mock response
+        check caller->respond(mockResponse);
+    }
+
+    resource function get rest/api/'3/filter/my(http:Caller caller, http:Request req) returns error? {
+        // Mock response with an array of Filter objects
+        json mockResponse = [
+            {
+                "id": "20000",
+                "name": "My Mock Filter",
+                "description": "This is a mock description for my filter."
+            },
+            {
+                "id": "20001",
+                "name": "Another Mock Filter",
+                "description": "Description for another mock filter."
+            }
+        ];
+
+        // Send the mock response
+        check caller->respond(mockResponse);
+    }
+
+    resource function post rest/api/'3/group(http:Caller caller, http:Request req) returns error? {
+            json mockResponse = {
+                "name": "first group",
+                "groupId": "12345",
+                "self": "http://localhost:9090/rest/api/3/group?groupId=12345"
+            };
+            check caller->respond(mockResponse);
+    }
+
+    resource function delete rest/api/'3/group(http:Caller caller, http:Request req) returns error? { 
+            http:Response mockResponse = new;
+            mockResponse.statusCode = 200;
+            mockResponse.setHeader("x-mock-confirmation", "Group 'first group' deleted successfully");
+
+            // Send the mock response
+            check caller->respond(mockResponse);
+    }
+
+    resource function get rest/api/'3/fieldconfiguration(http:Caller caller, http:Request req) returns error? {
+        // Create a mock response
+        json mockResponse = {
+            "startAt": 0,
+            "maxResults": 50,
+            "total": 10,  // Total field configurations, set to >0 for testing
+            "values": [
+                {
+                    "id": "1",
+                    "name": "Default Field Configuration",
+                    "description": "The default field configuration",
+                    "isDefault": true
+                },
+                {
+                    "id": "2",
+                    "name": "Custom Field Configuration",
+                    "description": "A custom field configuration",
+                    "isDefault": false
+                }
+            ]
+        };
+
+        // Send the mock response
+        http:Response res = new;
+        res.statusCode = 200;
+        res.setPayload(mockResponse);
+        check caller->respond(res);
+    }
+
+    resource function get rest/api/'3/'field(http:Caller caller, http:Request req) returns error? {
+        // Create a mock response
+        json mockResponse = [
+            {
+                "id": "customfield_10000",
+                "name": "Story Points",
+                "custom": true,
+                "orderable": true,
+                "navigable": true,
+                "searchable": true,
+                "schema": {
+                    "type": "number",
+                    "custom": "com.atlassian.jira.plugin.system.customfieldtypes:float",
+                    "customId": 10000
+                }
+            },
+            {
+                "id": "summary",
+                "name": "Summary",
+                "custom": false,
+                "orderable": true,
+                "navigable": true,
+                "searchable": true,
+                "schema": {
+                    "type": "string",
+                    "system": "summary"
+                }
+            }
+        ];
+
+        // Send the mock response
+        http:Response res = new;
+        res.statusCode = 200;
+        res.setPayload(mockResponse);
+        check caller->respond(res);
+    }
 }
+
+
