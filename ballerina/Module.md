@@ -74,13 +74,13 @@ configurable string baseUrl = ?;
 configurable string username = ?;
 configurable string apiToken = ?;
 
-ConnectionConfig config = {
-    auth: <http:CredentialsConfig>{
+final jira:Client jiraClient = check new({
+    baseUrl: baseUrl,
+    auth: {
         username: username,
         password: apiToken
     }
-};
-final Client jira = check new Client(config, serviceUrl);
+});
 ```
 ### Step 3: Invoke the connector operation
 
@@ -90,12 +90,10 @@ Now, utilize the available connector operations.
 
 ```ballerina
 public function main() returns error? {
-    IssueCreateResponse response = check jira->/rest/api/'3/issue(
-        payload={
-        key: "EX",
-        name: "Example",
-        projectTypeKey: "business",
-        leadAccountId:<"add a lead account id">
+    jira:ProjectRole role = check jiraClient->/rest/api/3/role.post(
+        payload = {
+            name: roleName,
+            description: roleDescription
         }
     );
 }
