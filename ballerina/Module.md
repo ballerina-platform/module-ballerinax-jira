@@ -1,10 +1,12 @@
 ## Overview
 
-[//]: # (TODO: Add overview mentioning the purpose of the module, supported REST API versions, and other high-level details.)
+[Jira](https://www.atlassian.com/software/jira)  is a widely-used issue and project tracking software by Atlassian. It provides a REST API that allows applications to connect with Jira to create, update, and delete various resources, enabling efficient project and task management.
+
+The `ballerinax/jira` package offers APIs to interact with the [Jira REST API](https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro), providing access to various endpoints for managing issues, filters, projects, and other resources.
 
 ## Setup guide
 
-[//]: # (TODO: Add detailed steps to obtain credentials and configure the module.)
+To use the Jira connector, you must have a Jira Cloud account with API access. If you do not have one, you can sign up for a Jira account on [Atlassian’s website](https://developer.atlassian.com/cloud/jira/platform/).
 
 ## Quickstart
 
