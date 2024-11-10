@@ -56,7 +56,7 @@ You have successfully integrated jira with your atlassian account. Now you can a
 
 ## Quickstart
 
-To use the `Twitter` connector in your Ballerina application, update the `.bal` file as follows:
+To use the `Jira` connector in your Ballerina application, update the `.bal` file as follows:
 
 ### step 1: Import the module
 
