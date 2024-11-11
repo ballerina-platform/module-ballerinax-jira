@@ -75,7 +75,7 @@ username = "<Your Atlassian Account Email>"
 apiToken = "<Your Jira API Token>"
 ```
 
-2. Create a `twitter:ConnectionConfig` with the obtained access token and initialize the connector with it.
+2. Create a `jira:ConnectionConfig` with the obtained access token and initialize the connector with it.
 
 ```ballerina
 configurable string baseUrl = ?;
