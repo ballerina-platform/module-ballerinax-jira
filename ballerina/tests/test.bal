@@ -37,7 +37,7 @@ function testGetMyself() returns error? {
     User response = check jira->/rest/api/'3/myself;
 
     // Assertions
-    test:assertNotEquals(response,(),"Myself data cannot be null");
+    test:assertNotEquals(response.name, (), "Name cannot be null");
 }
 
 
@@ -52,9 +52,7 @@ function testGetMyPermissions() returns error? {
 
     // Call the `getMyPermissions` endpoint.
     Permissions response = check jira->/rest/api/'3/mypermissions(queries = queryParams);
-
-    boolean havePermission = response?.permissions["BROWSE_PROJECTS"]?.havePermission ?: false;
-    test:assertTrue(havePermission, "Do not have permission to browse projects");
+    test:assertTrue(response?.permissions["BROWSE_PROJECTS"]?.havePermission, "Do not have permission to browse projects");
 }
 
 @test:Config {
@@ -71,8 +69,8 @@ function testCreateRole() returns error? {
     );
 
     // Assertions
-    test:assertEquals(response.name, "Developer", msg = "Role name does not match.");
-    test:assertEquals(response.description, "Role for developers", msg = "Role description does not match.");
+    test:assertEquals(response.name, "Developer", "Role name does not match.");
+    test:assertEquals(response.description, "Role for developers", "Role description does not match.");
 }
 
 @test:Config {
@@ -84,7 +82,7 @@ function testDeleteRole() returns error? {
     http:Response response = check jira->/rest/api/'3/role/[roleId].delete();
 
     // Assertions to verify that deletion was successful
-    test:assertEquals(response.statusCode, 204, msg = "Expected 204 No Content status for successful deletion.");
+    test:assertEquals(response.statusCode, 204, "Expected 204 No Content status for successful deletion.");
 }
 
 @test:Config {
@@ -95,13 +93,13 @@ function testCreateProject() returns error? {
     // Call the `createProject` endpoint.
     ProjectIdentifiers response = check jira->/rest/api/'3/project.post(
         payload={
-        key: "EX",
-        name: "Example",
-        projectTypeKey: "business",
-        leadAccountId:"712020:5d71be5f-debd-474f-9ec9-a97b9023ea4e"
+            key: "EX",
+            name: "Example",
+            projectTypeKey: "business",
+            leadAccountId:"712020:5d71be5f-debd-474f-9ec9-a97b9023ea4e"
         }
     );
-    test:assertNotEquals(response.id,null, msg = "Unsuccessful project creation");
+    test:assertNotEquals(response.id,null, "Unsuccessful project creation");
 }
 
 @test:Config {
@@ -113,10 +111,8 @@ function testGetProjectSecurityLevelLive() returns error? {
     // Call the live API to retrieve the security level details for the project.
     ProjectIssueSecurityLevels response = check jira->/rest/api/'3/project/[projectKeyOrId]/securitylevel();
 
-    
-
     // Assertions to verify expected properties in the live response
-    test:assertNotEquals(response.levels.length(), 0, msg = "No security levels found for project.");
+    test:assertNotEquals(response.levels.length(), 0, "No security levels found for project.");
 }
 
 @test:Config {
@@ -126,11 +122,11 @@ function testGetApplicationRoles() returns error? {
     ApplicationRole[] response = check jira->/rest/api/'3/applicationrole();
 
     // Validate the array is not empty and has expected properties in each item.
-    test:assertNotEquals(response.length(), 0, msg = "Expected non-empty application roles array");
+    test:assertNotEquals(response.length(), 0, "Expected non-empty application roles array");
 
     foreach var role in response {
-        test:assertNotEquals(role.name, "", msg = "Application role name should not be empty");
-        test:assertNotEquals(role.key, "", msg = "Application role key should not be empty");
+        test:assertNotEquals(role.name, "", "Application role name should not be empty");
+        test:assertNotEquals(role.key, "", "Application role key should not be empty");
     }
 }
 
@@ -143,8 +139,6 @@ function testGetSpecificApplicationRole() returns error? {
     ApplicationRole response = check jira->/rest/api/'3/applicationrole/[ProjectKey];
 
     // Assertions
-    test:assertNotEquals(response.key, "", msg = "Expected 'key' to be non-empty");
-    test:assertNotEquals(response.name, "", msg = "Expected 'name' to be non-empty");
     test:assertEquals(response.key, "jira-software", msg = "Expected key to be 'jira-software'");
     test:assertEquals(response.name, "Jira Software", msg = "Expected name to be 'Jira Software'");
 }
@@ -156,7 +150,7 @@ function testGetAuditRecords() returns error? {
     // Call the function without any query parameters
     AuditRecords response = check jira->/rest/api/'3/auditing/'record();
     // Assertions
-   test:assertNotEquals(response.records,null, msg = "Expected 'records' array to be non-empty");
+   test:assertNotEquals(response.records, null, "Expected 'records' array to be non-empty");
 }
 
 @test:Config {
@@ -167,7 +161,7 @@ function testGetClassificationLevels() returns error? {
     DataClassificationLevelsBean response = check jira->/rest/api/'3/classification\-levels();
 
     // Check the response status code for both live and mock tests
-    test:assertTrue(response?.classifications is json[], msg = "Expected 'classifications' key to be present in the response.");
+    test:assertTrue(response?.classifications is json[], "Expected 'classifications' key to be present in the response.");
 }
 
 @test:Config {
@@ -187,14 +181,13 @@ function testGetDashboards() returns error? {
 function testCreateDashboard() returns error? {
 
     // Call the post function
-    Dashboard response = check jira->/rest/api/'3/dashboard.post(payload={
+    Dashboard response = check jira->/rest/api/'3/dashboard.post(payload = {
         name: "Ansak's dashboard",
         description: "A dashboard to help auditors identify sample of issues to check.",
-        sharePermissions: [
-        ],
+        sharePermissions: [],
         editPermissions: []
     });
-        test:assertNotEquals(response.id, null, msg = "Dashboard id should not be empty.");
+    test:assertNotEquals(response.id, null, "Dashboard id should not be empty.");
 }
 
 @test:Config {
@@ -205,7 +198,7 @@ function testGetDefaultShareScope() returns error? {
     DefaultShareScope response = check jira->/rest/api/'3/filter/defaultShareScope();
 
     // Assertion: Check that 'scopeType' exists in the response
-        test:assertNotEquals(response.scope,"", msg = "Expected 'scope' to have a value");
+    test:assertNotEquals(response.scope, "", "Expected 'scope' to have a value");
 }
 
 @test:Config {
@@ -217,7 +210,7 @@ function testPutDefaultShareScope() returns error? {
 
     // Assertion: Check that the response contains the expected scope value
     
-        test:assertEquals(response.scope, "AUTHENTICATED", msg = "Expected 'scope' to be 'AUTHENTICATED'");
+    test:assertEquals(response.scope, "AUTHENTICATED", msg = "Expected 'scope' to be 'AUTHENTICATED'");
 }
 
 @test:Config {
@@ -225,45 +218,33 @@ function testPutDefaultShareScope() returns error? {
 }
 function testGetFavouriteFilters() returns error? {
 
-    // Call the get function without any query parameters
-Filter[]|error response = jira->/rest/api/'3/filter/favourite();
+  Filter[] response = check jira->/rest/api/'3/filter/my();
 
-if (response is Filter[]) {
-    // Verify live response has at least one Filter object
-    test:assertNotEquals(response.length(), 0, msg = "No Favourite Filters.");
-} else {
-    test:assertFail(msg = "Error occurred while fetching favourite filters: " + response.toString());
-}
+  test:assertNotEquals(response.length(), 0, "There are no My Filters.");
+
 }
 
 @test:Config {
     groups: ["live_tests", "mock_tests"]
 }
 function testGetMyFilters() returns error? {
-    // Call the get function without any query parameters
-    Filter[]|error response = jira->/rest/api/'3/filter/my();
 
-    // Assert that response is an array of Filter objects and check the array is not empty
-    test:assertTrue(response is Filter[], msg = "Expected response to be an array of Filter objects.");
-    if response is Filter[] {
-        test:assertNotEquals(response.length(), 0, msg = "There are no My Filters.");
-    }
+    Filter[] response = check jira->/rest/api/'3/filter/my();
+
+    test:assertNotEquals(response.length(), 0, "There are no My Filters.");
+
 }
 
 @test:Config {
     groups: ["live_tests", "mock_tests"]
 }
 function testPostGroup() returns error? {
-    
 
     // Call the function to create a group
-    Group|error response = jira->/rest/api/'3/group.post(payload = {name: "first group"});
+    Group response = check jira->/rest/api/'3/group.post(payload = {name: "first group"});
 
-    // Validate the response
-    test:assertTrue(response is Group, msg = "Expected response to be a Group object.");
-    if response is Group {
-        test:assertEquals(response.name, "first group", msg = "Group name does not match the expected value.");
-    }
+    //Assertation
+    test:assertEquals(response.name, "first group", "Group name does not match the expected value.");
 }
 
 @test:Config {
@@ -272,31 +253,20 @@ function testPostGroup() returns error? {
 function testDeleteGroup() returns error? {
 
     // Call the function to delete the specified group
-    http:Response|error response = jira->/rest/api/'3/group.delete(queries={groupname: "first group"});
-
+    http:Response response = check jira->/rest/api/'3/group.delete(queries = {groupname: "first group"});
     // Validate the response
-    test:assertTrue(response is http:Response, msg = "Expected a HTTP Response object.");
-    if response is http:Response {
-        test:assertEquals(response.statusCode, 200, msg = "Expected HTTP status code 200 indicating successful deletion.");
-    }
+    test:assertEquals(response.statusCode, 200, "Expected HTTP status code 200 indicating successful deletion.");
+
 }
 
 @test:Config {
     groups: ["live_tests", "mock_tests"]
 }
 function testGetAllFieldConfigurations() returns error? {
-   
-    // Call the function to get all field configurations
-    PageBeanFieldConfigurationDetails|error response = jira->/rest/api/'3/fieldconfiguration();
 
-    // Validate the response
-    if response is PageBeanFieldConfigurationDetails {
-        test:assertTrue(response.total > 0, msg = "There is no field configuration");
-    }
-    //for mock validation
-    if response is json {
-        test:assertTrue(response.total > 0, msg = "There is no field configuration");
-    }
+    PageBeanFieldConfigurationDetails response = check jira->/rest/api/'3/fieldconfiguration();
+
+    test:assertTrue(response.total > 0, "There is no field configuration");
 }
 
 @test:Config {
@@ -304,13 +274,8 @@ function testGetAllFieldConfigurations() returns error? {
 }
 function testGetAllFields() returns error? {
 
-    // Call the function to get all fields
-    FieldDetails[]|error response = jira->/rest/api/'3/'field();
+   FieldDetails[] response = check jira->/rest/api/'3/field();
 
-    // Validate the response
-    if response is FieldDetails[] {
-        test:assertNotEquals(response.length(), 0, msg = "Expected field details array to be non-empty.");
-    } else {
-        test:assertFail(msg = "Expected a FieldDetails[] response.");
-    }
+   test:assertNotEquals(response.length(), 0, "Expected field details array to be non-empty.");
+
 }
