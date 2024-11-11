@@ -81,7 +81,7 @@ service / on httpListener {
     }
 
     resource function get rest/api/'3/applicationrole() returns ApplicationRole[]|http:Unauthorized|http:Forbidden {
-       return[
+       return ApplicationRole[
             {
                 "key": "jira-software",
                 "groups": ["org-admins", "jira-users-mohamedansak", "atlassian-addons-admin"],
