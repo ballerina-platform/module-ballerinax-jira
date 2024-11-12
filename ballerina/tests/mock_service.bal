@@ -245,7 +245,8 @@ service / on httpListener {
 
     resource function get rest/api/'3/'field() returns FieldDetails[]|http:Unauthorized {
         // Create a mock response
-        FieldDetails[] mockResponse = [
+        FieldDetails[] mockResponse = 
+        [
             {
                 "id": "customfield_10000",
                 "name": "Story Points",
@@ -253,7 +254,8 @@ service / on httpListener {
                 "orderable": true,
                 "navigable": true,
                 "searchable": true,
-                "schema": {
+                "schema": 
+                {
                     "type": "number",
                     "custom": "com.atlassian.jira.plugin.system.customfieldtypes:float",
                     "customId": 10000
@@ -266,13 +268,13 @@ service / on httpListener {
                 "orderable": true,
                 "navigable": true,
                 "searchable": true,
-                "schema": {
+                "schema": 
+                {
                     "type": "string",
                     "system": "summary"
                 }
             }
         ];
-
         // Send the mock response
         return mockResponse;
     }
