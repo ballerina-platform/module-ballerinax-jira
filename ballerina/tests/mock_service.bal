@@ -65,7 +65,8 @@ service / on httpListener {
 
     resource function post rest/api/'3/project(@http:Payload CreateProjectDetails payload) returns ProjectIdentifiers|http:BadRequest|http:Unauthorized|http:Forbidden {
         // Directly send a mock response without checking the payload
-       return {
+       return 
+        {
             id: 10001,
             key: "EX",
             self: "http://example.com/project/10001"
@@ -73,8 +74,10 @@ service / on httpListener {
     }
 
     resource function get rest/api/'3/project/[string projectKeyOrId]/securitylevel() returns ProjectIssueSecurityLevels|http:NotFound {
-        return {
-            levels: [
+        return 
+        {
+            levels: 
+            [
                 {
                     id: "10000",
                     name: "Default Security Level",
@@ -123,7 +126,8 @@ service / on httpListener {
     // Mock endpoint for auditing records
     resource function get rest/api/'3/auditing/'record(string? filter, string? 'from, string? to, int:Signed32 offset = 0, int:Signed32 'limit = 1000) returns AuditRecords|ErrorCollectionUnauthorized|ErrorCollection{
         // Mock response with a sample record for testing
-        return{
+        return
+        {
             "records": [
                 {
                     "id": 1001,
@@ -174,7 +178,8 @@ service / on httpListener {
     resource function put rest/api/'3/filter/defaultShareScope(@http:Payload DefaultShareScope payload) returns DefaultShareScope|http:BadRequest|http:Unauthorized {
 
         // Mock response, echoing the request scope value
-        return {
+        return 
+        {
             "scope":"AUTHENTICATED"
         };
 
@@ -182,7 +187,8 @@ service / on httpListener {
 
     resource function get rest/api/'3/filter/favourite(string? expand) returns Filter[]|http:Unauthorized {
         // Mock response with an array of Filter objects
-      return [
+      return 
+        [
             {
                 "id": "10000",
                 "name": "My Favorite Filter",
@@ -213,7 +219,8 @@ service / on httpListener {
     }
 
     resource function post rest/api/'3/group(@http:Payload AddGroupBean payload) returns Group|http:BadRequest|http:Unauthorized|http:Forbidden {
-            return {
+            return 
+            {
                 "name": "first group",
                 "groupId": "12345",
                 "self": "http://localhost:9090/rest/api/3/group?groupId=12345"
@@ -227,7 +234,8 @@ service / on httpListener {
 
     resource function get rest/api/'3/fieldconfiguration(int[]? id, int startAt = 0, int:Signed32 maxResults = 50, boolean isDefault = false, string query = "") returns PageBeanFieldConfigurationDetails|http:Unauthorized|http:Forbidden {
         // Create a mock response
-        PageBeanFieldConfigurationDetails mockResponse = {
+        PageBeanFieldConfigurationDetails mockResponse = 
+        {
             "startAt": 0,
             "maxResults": 50,
             "total": 10  // Total field configurations, set to >0 for testing

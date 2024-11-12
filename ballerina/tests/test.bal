@@ -24,7 +24,8 @@ configurable string serviceUrl = isLiveServer ? os:getEnv("SERVICE_URL") : "http
 configurable string token = isLiveServer ? os:getEnv("JIRA_TOKEN") : "test";
 configurable string username = isLiveServer ? os:getEnv("JIRA_USERNAME") : "test@example.com";
 ConnectionConfig config = {
-    auth: <http:CredentialsConfig>{
+    auth: <http:CredentialsConfig>
+    {
         username: username,
         password: token
     }
