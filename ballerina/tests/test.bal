@@ -14,9 +14,10 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import ballerina/http;
 import ballerina/test;
 import ballerina/os;
-import ballerina/http;
+
 
 configurable boolean isLiveServer = os:getEnv("IS_LIVE_SERVER") == "true";
 configurable string serviceUrl = isLiveServer ? os:getEnv("SERVICE_URL") : "http://localhost:9090";
@@ -52,7 +53,7 @@ function testGetMyPermissions() returns error? {
 
     // Call the `getMyPermissions` endpoint.
     Permissions response = check jira->/rest/api/'3/mypermissions(queries = queryParams);
-    test:assertTrue(response?.permissions["BROWSE_PROJECTS"]?.havePermission, "Do not have permission to browse projects");
+    test:assertTrue(response?.permissions["BROWSE_PROJECTS"]?.havePermission ?: false, "Do not have permission to browse projects");
 }
 
 @test:Config {
@@ -92,7 +93,8 @@ function testCreateProject() returns error? {
 
     // Call the `createProject` endpoint.
     ProjectIdentifiers response = check jira->/rest/api/'3/project.post(
-        payload={
+        payload=
+        {
             key: "EX",
             name: "Example",
             projectTypeKey: "business",
@@ -274,7 +276,7 @@ function testGetAllFieldConfigurations() returns error? {
 }
 function testGetAllFields() returns error? {
 
-   FieldDetails[] response = check jira->/rest/api/'3/field();
+   FieldDetails[] response = check jira->/rest/api/'3/'field();
 
    test:assertNotEquals(response.length(), 0, "Expected field details array to be non-empty.");
 

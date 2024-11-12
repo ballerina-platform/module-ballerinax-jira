@@ -11148,3 +11148,8 @@ public type SearchSecuritySchemesQueries record {
     # The index of the first item to return in a page of results (page offset).
     string startAt = "0";
 };
+
+type ErrorCollectionUnauthorized record {
+    string errorMessage;
+    string errorCode;
+};

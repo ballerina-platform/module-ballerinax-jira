@@ -17,49 +17,53 @@ import ballerina/http;
 
 listener http:Listener httpListener = new (9090);
 
+
 service / on httpListener {
 
     resource function get rest/api/'3/myself(string? expand) returns User|http:Unauthorized {
-        return {
+        return
+        {
             "name": "Mia Krystof",
             "active": true
         };
     }
+    
 
     // Mock response for `getMyPermissions`
-    resource function get rest/api/'3/mypermissions(string? projectKey, string? projectId, string? issueKey, string? issueId, string? permissions, string? projectUuid, string? projectConfigurationUuid, string? commentId) returns Permissions|ErrorCollectionBadRequest|ErrorCollectionUnauthorized|ErrorCollectionNotFound {
-    return{
-        permissions: {
-                "BROWSE_PROJECTS": {
+    resource function get rest/api/'3/mypermissions(string? projectKey, string? projectId, string? issueKey, string? issueId, string? permissions, string? projectUuid, string? projectConfigurationUuid, string? commentId) returns Permissions|ErrorCollection|ErrorCollectionUnauthorized|http:NotFound {
+    return
+    {
+        permissions:
+         {
+            "BROWSE_PROJECTS": 
+                {
                     id: "10",
                     key: "BROWSE_PROJECTS",
                     name: "Browse Projects",
                     description: "Ability to browse projects and the issues within them.",
-                    havePermission: true 
+                    havePermission: true                   
                 }
-            }
-    }
-    }
+         }
+    };
+}
 
 
     // Mock response for `post rest/api/'3/role`
-    resource function post rest/api/'3/role(@http:Payload CreateUpdateRoleRequestBean payload) returns ProjectRoleOk|http:BadRequest|http:Unauthorized|http:Forbidden|http:Conflict {
-    return{
-        id: 101,
-        name: payload.name,
-        description: payload.description
-    }
+    resource function post rest/api/'3/role(@http:Payload CreateUpdateRoleRequestBean payload) returns ProjectRole|http:BadRequest|http:Unauthorized|http:Forbidden|http:Conflict {
+        return
+            {
+                id: 101,
+                name: payload.name,
+                description: payload.description
+            };
     }
 
      // New mock for `delete rest/api/'3/role/[int id]`
      resource function delete rest/api/'3/role/[int id](int? swap) returns http:NoContent|http:BadRequest|http:Unauthorized|http:Forbidden|http:NotFound|http:Conflict {
-        http:Response response = new;
-        response.statusCode = 204;
-        return response;
+        return http:NO_CONTENT;
     }
 
     resource function post rest/api/'3/project(@http:Payload CreateProjectDetails payload) returns ProjectIdentifiers|http:BadRequest|http:Unauthorized|http:Forbidden {
-    
         // Directly send a mock response without checking the payload
        return {
             id: 10001,
@@ -81,7 +85,7 @@ service / on httpListener {
     }
 
     resource function get rest/api/'3/applicationrole() returns ApplicationRole[]|http:Unauthorized|http:Forbidden {
-       return ApplicationRole[
+       return [
             {
                 "key": "jira-software",
                 "groups": ["org-admins", "jira-users-mohamedansak", "atlassian-addons-admin"],
@@ -109,14 +113,15 @@ service / on httpListener {
 
      // Mock endpoint to retrieve a specific ApplicationRole based on key
     resource function get rest/api/'3/applicationrole/[string 'key]() returns ApplicationRole|http:Unauthorized|http:Forbidden|http:NotFound {
-        return { 
-                "key": "jira-software",
-                "name": "Jira Software"
-        } 
+        return 
+        { 
+            "key": "jira-software",
+            "name": "Jira Software"
+        }; 
     }
 
     // Mock endpoint for auditing records
-    resource function get rest/api/'3/auditing/'record(string? filter, string? 'from, string? to, int:Signed32 offset = 0, int:Signed32 'limit = 1000) returns AuditRecords|ErrorCollectionUnauthorized|ErrorCollectionForbidden {
+    resource function get rest/api/'3/auditing/'record(string? filter, string? 'from, string? to, int:Signed32 offset = 0, int:Signed32 'limit = 1000) returns AuditRecords|ErrorCollectionUnauthorized|ErrorCollection{
         // Mock response with a sample record for testing
         return{
             "records": [
@@ -132,21 +137,24 @@ service / on httpListener {
 
     resource function get rest/api/'3/classification\-levels(("PUBLISHED"|"ARCHIVED"|"DRAFT")[]? status, "rank"|"-rank"|"+rank"? orderBy) returns DataClassificationLevelsBean|http:Unauthorized {
         // Mock response mimicking a successful response with `classifications` key
-     return {
+     return 
+        {
             "classifications": []
         };
     }
 
-    resource function get rest/api/'3/dashboard("my"|"favourite"? filter, int:Signed32 startAt = 0, int:Signed32 maxResults = 20) returns PageOfDashboards|ErrorCollectionBadRequest|ErrorCollectionUnauthorized {
+    resource function get rest/api/'3/dashboard("my"|"favourite"? filter, int:Signed32 startAt = 0, int:Signed32 maxResults = 20) returns PageOfDashboards|ErrorCollection|ErrorCollectionUnauthorized {
         // Mock response mimicking the structure of PageOfDashboards
-        return {
+        return 
+        {
             "dashboards": []
         };
     }
 
-    resource function post rest/api/'3/dashboard(@http:Payload DashboardDetails payload, boolean extendAdminPermissions = false) returns DashboardOk|ErrorCollectionBadRequest|ErrorCollectionUnauthorized {
+    resource function post rest/api/'3/dashboard(@http:Payload DashboardDetails payload, boolean extendAdminPermissions = false) returns Dashboard|ErrorCollection|ErrorCollectionUnauthorized {
         // Mock response body mimicking the actual API response
-       return {
+       return 
+        {
             "name": "Auditors dashboard",
             "id":"10001",
             "description": "A dashboard to help auditors identify sample of issues to check.",
@@ -157,7 +165,8 @@ service / on httpListener {
 
     resource function get rest/api/'3/filter/defaultShareScope() returns DefaultShareScope|http:Unauthorized {
         // Mock response with a default share scope
-        return {
+        return 
+        {
             "scope": "GLOBAL"
         };
     }
@@ -212,44 +221,23 @@ service / on httpListener {
     }
 
     resource function delete rest/api/'3/group(string? groupname, string? groupId, string? swapGroup, string? swapGroupId) returns http:Ok|http:BadRequest|http:Unauthorized|http:Forbidden|http:NotFound {
-        http:Response mockResponse = new;
-        mockResponse.statusCode = 200;
-        mockResponse.setHeader("x-mock-confirmation", "Group 'first group' deleted successfully");
-        return mockResponse;
+        http:Ok okResponse = { };
+        return okResponse;
     }
 
     resource function get rest/api/'3/fieldconfiguration(int[]? id, int startAt = 0, int:Signed32 maxResults = 50, boolean isDefault = false, string query = "") returns PageBeanFieldConfigurationDetails|http:Unauthorized|http:Forbidden {
         // Create a mock response
-        json mockResponse = {
+        PageBeanFieldConfigurationDetails mockResponse = {
             "startAt": 0,
             "maxResults": 50,
-            "total": 10,  // Total field configurations, set to >0 for testing
-            "values": [
-                {
-                    "id": "1",
-                    "name": "Default Field Configuration",
-                    "description": "The default field configuration",
-                    "isDefault": true
-                },
-                {
-                    "id": "2",
-                    "name": "Custom Field Configuration",
-                    "description": "A custom field configuration",
-                    "isDefault": false
-                }
-            ]
+            "total": 10  // Total field configurations, set to >0 for testing
         };
-
-        // Send the mock response
-        http:Response res = new;
-        res.statusCode = 200;
-        res.setPayload(mockResponse);
-        return(res);
+        return mockResponse;
     }
 
     resource function get rest/api/'3/'field() returns FieldDetails[]|http:Unauthorized {
         // Create a mock response
-        json mockResponse = [
+        FieldDetails[] mockResponse = [
             {
                 "id": "customfield_10000",
                 "name": "Story Points",
@@ -278,10 +266,7 @@ service / on httpListener {
         ];
 
         // Send the mock response
-        http:Response res = new;
-        res.statusCode = 200;
-        res.setPayload(mockResponse);
-        return res;
+        return mockResponse;
     }
 }
 
