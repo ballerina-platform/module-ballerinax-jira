@@ -83,7 +83,8 @@ function testDeleteRole() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testCreateProject() returns error? {
-    ProjectIdentifiers response = check jira->/rest/api/'3/project.post(
+    ProjectIdentifiers response = check jira->/rest/api/'3/project.post
+    (
         payload=
         {
             key: "EX",
