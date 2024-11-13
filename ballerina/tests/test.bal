@@ -36,7 +36,6 @@ final Client jira = check new Client(config, serviceUrl);
     groups: ["live_tests", "mock_tests"]
 }
 function testGetMyself() returns error? {
-
     User response = check jira->/rest/api/'3/myself;
 
     test:assertEquals(response.name,"Mia Krystof", "Name cannot be null");
@@ -46,7 +45,6 @@ function testGetMyself() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testGetMyPermissions() returns error? {
-   
     GetMyPermissionsQueries queryParams = {
         permissions: "BROWSE_PROJECTS"
     };
@@ -60,7 +58,6 @@ function testGetMyPermissions() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testCreateRole() returns error? {
-
     ProjectRole response = check jira->/rest/api/'3/role.post(
         payload = {
             name: "Developer",
@@ -86,7 +83,6 @@ function testDeleteRole() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testCreateProject() returns error? {
-
     ProjectIdentifiers response = check jira->/rest/api/'3/project.post(
         payload=
         {
@@ -105,7 +101,6 @@ function testCreateProject() returns error? {
 }
 function testGetProjectSecurityLevelLive() returns error? {
     string projectKeyOrId = "EX";  
-
     ProjectIssueSecurityLevels response = check jira->/rest/api/'3/project/[projectKeyOrId]/securitylevel();
 
     test:assertEquals(response.levels[0].id, "10000", "No security levels found for project.");
@@ -127,7 +122,6 @@ function testGetApplicationRoles() returns error? {
 }
 function testGetSpecificApplicationRole() returns error? {
     string ProjectKey = "jira-software";
-
     ApplicationRole response = check jira->/rest/api/'3/applicationrole/[ProjectKey];
 
     test:assertEquals(response.key, "jira-software", msg = "Expected key to be 'jira-software'");
@@ -138,17 +132,15 @@ function testGetSpecificApplicationRole() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testGetAuditRecords() returns error? {
-  
     AuditRecords response = check jira->/rest/api/'3/auditing/'record();
   
-   test:assertNotEquals(response.records, null, "Expected 'records' array to be non-empty");
+    test:assertNotEquals(response.records, null, "Expected 'records' array to be non-empty");
 }
 
 @test:Config {
     groups: ["live_tests", "mock_tests"]
 }
 function testGetClassificationLevels() returns error? {
-
     DataClassificationLevelsBean response = check jira->/rest/api/'3/classification\-levels();
 
     test:assertTrue(response?.classifications is json[], "Expected 'classifications' key to be present in the response.");
@@ -158,7 +150,6 @@ function testGetClassificationLevels() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testGetDashboards() returns error? {
-    
     PageOfDashboards response = check jira->/rest/api/'3/dashboard();
 
     test:assertTrue(response?.dashboards is Dashboard[], msg = "Expected 'dashboards' key to be present in the response and to be an array.");
@@ -168,7 +159,6 @@ function testGetDashboards() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testCreateDashboard() returns error? {
-
     Dashboard response = check jira->/rest/api/'3/dashboard.post(payload = {
         name: "Ansak's dashboard",
         description: "A dashboard to help auditors identify sample of issues to check.",
@@ -183,7 +173,6 @@ function testCreateDashboard() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testGetDefaultShareScope() returns error? {
-
     DefaultShareScope response = check jira->/rest/api/'3/filter/defaultShareScope();
 
     test:assertEquals(response.scope, "GLOBAL", "Expected 'scope' to be 'GLOBAL'");
@@ -193,7 +182,6 @@ function testGetDefaultShareScope() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testPutDefaultShareScope() returns error? {
-    
     DefaultShareScope response = check jira->/rest/api/'3/filter/defaultShareScope.put(payload = {scope:"AUTHENTICATED" });
     
     test:assertEquals(response.scope, "AUTHENTICATED", msg = "Expected 'scope' to be 'AUTHENTICATED'");
@@ -203,7 +191,6 @@ function testPutDefaultShareScope() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testGetFavouriteFilters() returns error? {
-
   Filter[] response = check jira->/rest/api/'3/filter/favourite();
 
   test:assertEquals(response[0].id, "10000", "No favourite filter with the specified ID");
@@ -213,7 +200,6 @@ function testGetFavouriteFilters() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testGetMyFilters() returns error? {
-
     Filter[] response = check jira->/rest/api/'3/filter/my();
 
     test:assertEquals(response[0].id, "20000", "Filter ID not match");
@@ -223,7 +209,6 @@ function testGetMyFilters() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testPostGroup() returns error? {
-
     Group response = check jira->/rest/api/'3/group.post(payload = {name: "first group"});
 
     test:assertEquals(response.name, "first group", "Group name does not match the expected value.");
@@ -233,7 +218,6 @@ function testPostGroup() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testDeleteGroup() returns error? {
-
     http:Response response = check jira->/rest/api/'3/group.delete(queries = {groupname: "first group"});
 
     test:assertEquals(response.statusCode, 200, "Expected HTTP status code 200 indicating successful deletion.");
@@ -243,7 +227,6 @@ function testDeleteGroup() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testGetAllFieldConfigurations() returns error? {
-
     PageBeanFieldConfigurationDetails response = check jira->/rest/api/'3/fieldconfiguration();
 
     test:assertTrue(response.total > 0, "There is no field configuration");
@@ -253,7 +236,6 @@ function testGetAllFieldConfigurations() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testGetAllFields() returns error? {
-
    FieldDetails[] response = check jira->/rest/api/'3/'field();
 
    test:assertEquals(response[0].id, "customfield_10000", "Expected field details array to be non-empty.");
