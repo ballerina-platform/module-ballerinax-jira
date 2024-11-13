@@ -36,24 +36,23 @@ final Client jira = check new Client(config, serviceUrl);
     groups: ["live_tests", "mock_tests"]
 }
 function testGetMyself() returns error? {
+
     User response = check jira->/rest/api/'3/myself;
 
-    // Assertions
-    test:assertNotEquals(response.name, (), "Name cannot be null");
+    test:assertEquals(response.name,"Mia Krystof", "Name cannot be null");
 }
-
 
 @test:Config {
     groups: ["live_tests", "mock_tests"]
 }
 function testGetMyPermissions() returns error? {
-    // Define `queryParams` as a `GetMyPermissionsQueries` with a single string.
+   
     GetMyPermissionsQueries queryParams = {
         permissions: "BROWSE_PROJECTS"
     };
 
-    // Call the `getMyPermissions` endpoint.
     Permissions response = check jira->/rest/api/'3/mypermissions(queries = queryParams);
+
     test:assertTrue(response?.permissions["BROWSE_PROJECTS"]?.havePermission ?: false, "Do not have permission to browse projects");
 }
 
@@ -62,7 +61,6 @@ function testGetMyPermissions() returns error? {
 }
 function testCreateRole() returns error? {
 
-    // Call the `post rest/api/'3/role` endpoint with the payload
     ProjectRole response = check jira->/rest/api/'3/role.post(
         payload = {
             name: "Developer",
@@ -70,7 +68,6 @@ function testCreateRole() returns error? {
         }
     );
 
-    // Assertions
     test:assertEquals(response.name, "Developer", "Role name does not match.");
     test:assertEquals(response.description, "Role for developers", "Role description does not match.");
 }
@@ -79,11 +76,9 @@ function testCreateRole() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testDeleteRole() returns error? {
-    // Define the role ID to delete
     int roleId = 10009; 
     http:Response response = check jira->/rest/api/'3/role/[roleId].delete();
 
-    // Assertions to verify that deletion was successful
     test:assertEquals(response.statusCode, 204, "Expected 204 No Content status for successful deletion.");
 }
 
@@ -92,7 +87,6 @@ function testDeleteRole() returns error? {
 }
 function testCreateProject() returns error? {
 
-    // Call the `createProject` endpoint.
     ProjectIdentifiers response = check jira->/rest/api/'3/project.post(
         payload=
         {
@@ -102,20 +96,19 @@ function testCreateProject() returns error? {
             leadAccountId:"712020:5d71be5f-debd-474f-9ec9-a97b9023ea4e"
         }
     );
-    test:assertNotEquals(response.id,null, "Unsuccessful project creation");
+
+    test:assertEquals(response.id, 10001, "Unsuccessful project creation");
 }
 
 @test:Config {
     groups: ["live_tests", "mock_tests"]
 }
 function testGetProjectSecurityLevelLive() returns error? {
-    string projectKeyOrId = "EX";  // Specify a valid project key or ID here
+    string projectKeyOrId = "EX";  
 
-    // Call the live API to retrieve the security level details for the project.
     ProjectIssueSecurityLevels response = check jira->/rest/api/'3/project/[projectKeyOrId]/securitylevel();
 
-    // Assertions to verify expected properties in the live response
-    test:assertNotEquals(response.levels.length(), 0, "No security levels found for project.");
+    test:assertEquals(response.levels[0].id, "10000", "No security levels found for project.");
 }
 
 @test:Config {
@@ -124,13 +117,9 @@ function testGetProjectSecurityLevelLive() returns error? {
 function testGetApplicationRoles() returns error? {
     ApplicationRole[] response = check jira->/rest/api/'3/applicationrole();
 
-    // Validate the array is not empty and has expected properties in each item.
     test:assertNotEquals(response.length(), 0, "Expected non-empty application roles array");
-
-    foreach var role in response {
-        test:assertNotEquals(role.name, "", "Application role name should not be empty");
-        test:assertNotEquals(role.key, "", "Application role key should not be empty");
-    }
+    test:assertEquals(response[0].name, "Jira Software", "Application role name should not be empty");
+    test:assertEquals(response[0].key, "jira-software", "Application role key should not be empty");
 }
 
 @test:Config {
@@ -141,7 +130,6 @@ function testGetSpecificApplicationRole() returns error? {
 
     ApplicationRole response = check jira->/rest/api/'3/applicationrole/[ProjectKey];
 
-    // Assertions
     test:assertEquals(response.key, "jira-software", msg = "Expected key to be 'jira-software'");
     test:assertEquals(response.name, "Jira Software", msg = "Expected name to be 'Jira Software'");
 }
@@ -150,9 +138,9 @@ function testGetSpecificApplicationRole() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testGetAuditRecords() returns error? {
-    // Call the function without any query parameters
+  
     AuditRecords response = check jira->/rest/api/'3/auditing/'record();
-    // Assertions
+  
    test:assertNotEquals(response.records, null, "Expected 'records' array to be non-empty");
 }
 
@@ -160,10 +148,9 @@ function testGetAuditRecords() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testGetClassificationLevels() returns error? {
-    // Invoke the function without query parameters.
+
     DataClassificationLevelsBean response = check jira->/rest/api/'3/classification\-levels();
 
-    // Check the response status code for both live and mock tests
     test:assertTrue(response?.classifications is json[], "Expected 'classifications' key to be present in the response.");
 }
 
@@ -171,10 +158,9 @@ function testGetClassificationLevels() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testGetDashboards() returns error? {
-    // Invoke the function without query parameters.
+    
     PageOfDashboards response = check jira->/rest/api/'3/dashboard();
 
-    // Check that the `dashboards` key exists and is an array in the response
     test:assertTrue(response?.dashboards is Dashboard[], msg = "Expected 'dashboards' key to be present in the response and to be an array.");
 }
 
@@ -183,35 +169,32 @@ function testGetDashboards() returns error? {
 }
 function testCreateDashboard() returns error? {
 
-    // Call the post function
     Dashboard response = check jira->/rest/api/'3/dashboard.post(payload = {
         name: "Ansak's dashboard",
         description: "A dashboard to help auditors identify sample of issues to check.",
         sharePermissions: [],
         editPermissions: []
     });
-    test:assertNotEquals(response.id, null, "Dashboard id should not be empty.");
+
+    test:assertEquals(response.id, "10001", "Dashboard id should not be empty.");
 }
 
 @test:Config {
     groups: ["live_tests", "mock_tests"]
 }
 function testGetDefaultShareScope() returns error? {
-    // Call the get default share scope function
+
     DefaultShareScope response = check jira->/rest/api/'3/filter/defaultShareScope();
 
-    // Assertion: Check that 'scopeType' exists in the response
-    test:assertNotEquals(response.scope, "", "Expected 'scope' to have a value");
+    test:assertEquals(response.scope, "GLOBAL", "Expected 'scope' to be 'GLOBAL'");
 }
 
 @test:Config {
     groups: ["live_tests", "mock_tests"]
 }
 function testPutDefaultShareScope() returns error? {
-    // Call the put function
+    
     DefaultShareScope response = check jira->/rest/api/'3/filter/defaultShareScope.put(payload = {scope:"AUTHENTICATED" });
-
-    // Assertion: Check that the response contains the expected scope value
     
     test:assertEquals(response.scope, "AUTHENTICATED", msg = "Expected 'scope' to be 'AUTHENTICATED'");
 }
@@ -221,10 +204,9 @@ function testPutDefaultShareScope() returns error? {
 }
 function testGetFavouriteFilters() returns error? {
 
-  Filter[] response = check jira->/rest/api/'3/filter/my();
+  Filter[] response = check jira->/rest/api/'3/filter/favourite();
 
-  test:assertNotEquals(response.length(), 0, "There are no My Filters.");
-
+  test:assertEquals(response[0].id, "10000", "No favourite filter with the specified ID");
 }
 
 @test:Config {
@@ -234,8 +216,7 @@ function testGetMyFilters() returns error? {
 
     Filter[] response = check jira->/rest/api/'3/filter/my();
 
-    test:assertNotEquals(response.length(), 0, "There are no My Filters.");
-
+    test:assertEquals(response[0].id, "20000", "Filter ID not match");
 }
 
 @test:Config {
@@ -243,10 +224,8 @@ function testGetMyFilters() returns error? {
 }
 function testPostGroup() returns error? {
 
-    // Call the function to create a group
     Group response = check jira->/rest/api/'3/group.post(payload = {name: "first group"});
 
-    //Assertation
     test:assertEquals(response.name, "first group", "Group name does not match the expected value.");
 }
 
@@ -255,11 +234,9 @@ function testPostGroup() returns error? {
 }
 function testDeleteGroup() returns error? {
 
-    // Call the function to delete the specified group
     http:Response response = check jira->/rest/api/'3/group.delete(queries = {groupname: "first group"});
-    // Validate the response
-    test:assertEquals(response.statusCode, 200, "Expected HTTP status code 200 indicating successful deletion.");
 
+    test:assertEquals(response.statusCode, 200, "Expected HTTP status code 200 indicating successful deletion.");
 }
 
 @test:Config {
@@ -279,6 +256,5 @@ function testGetAllFields() returns error? {
 
    FieldDetails[] response = check jira->/rest/api/'3/'field();
 
-   test:assertNotEquals(response.length(), 0, "Expected field details array to be non-empty.");
-
+   test:assertEquals(response[0].id, "customfield_10000", "Expected field details array to be non-empty.");
 }

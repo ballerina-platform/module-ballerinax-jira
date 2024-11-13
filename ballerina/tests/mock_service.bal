@@ -148,7 +148,6 @@ service / on httpListener {
     }
 
     resource function get rest/api/'3/dashboard("my"|"favourite"? filter, int:Signed32 startAt = 0, int:Signed32 maxResults = 20) returns PageOfDashboards|ErrorCollection|ErrorCollectionUnauthorized {
-        // Mock response mimicking the structure of PageOfDashboards
         return 
         {
             "dashboards": []
@@ -203,7 +202,6 @@ service / on httpListener {
     }
 
     resource function get rest/api/'3/filter/my(string? expand, boolean includeFavourites = false) returns Filter[]|http:Unauthorized {
-        // Mock response with an array of Filter objects
        return [
             {
                 "id": "20000",
