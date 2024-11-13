@@ -48,7 +48,7 @@ You have successfully integrated jira with your atlassian account. Now you can a
 
 ## Quickstart
 
-To use the `Twitter` connector in your Ballerina application, update the `.bal` file as follows:
+To use the `jira` connector in your Ballerina application, update the `.bal` file as follows:
 
 ### step 1: Import the module
 
@@ -67,7 +67,7 @@ username = "<Your Atlassian Account Email>"
 apiToken = "<Your Jira API Token>"
 ```
 
-2. Create a `twitter:ConnectionConfig` with the obtained access token and initialize the connector with it.
+2. Create a `jira:ConnectionConfig` with the obtained access token and initialize the connector with it.
 
 ```ballerina
 configurable string baseUrl = ?;
