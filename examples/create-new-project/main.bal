@@ -44,6 +44,38 @@ public function main() returns error? {
         }
     );
     io:println("Project created with ID: ", project.id);
+
+    jira:ProjectRole developerRole = check jira->/rest/api/'3/role.post({
+        name: "Developer",
+        description: "Role for developers"
+    });
+    io:println("Developer role created with ID: " + developerRole.id.toString());
+
+    jira:ProjectRole testerRole = check jira->/rest/api/'3/role.post({
+        name: "Tester",
+        description: "Role for testers"
+    });
+    io:println("Tester role created with ID: " + testerRole.id.toString()); 
+
+    jira:CreatedIssue issue1 = check jira->/rest/api/'3/issue.post({
+        fields: {
+            project: { key: projectKey },
+            summary: "User Story 1: Set up project repository",
+            issuetype: { name: "Story" },
+            description: "Initialize repository with necessary project structure and documentation."
+        }
+    });
+    io:println("Issue created with ID: " + issue1.id.toString());
+
+    jira:CreatedIssue issue2 = check jira->/rest/api/'3/issue.post({
+        fields: {
+            project: { key: projectKey },
+            summary: "Task: Configure CI/CD pipeline",
+            issuetype: { name: "Task" },
+            description: "Set up continuous integration and deployment pipeline for the project."
+        }
+    });
+    io:println("Issue created with ID: " + issue2.id.toString());
 }
 
 
