@@ -96,7 +96,7 @@ final jira:Client jiraClient = check new({
 
 Now, utilize the available connector operations.
 
-#### create an issue
+#### create a role
 
 ```ballerina
 public function main() returns error? {
