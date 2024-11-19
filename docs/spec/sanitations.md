@@ -9,7 +9,6 @@ This document records the sanitation done on top of the official OpenAPI specifi
 The OpenAPI specification is obtained from ([Atlassian official website](https://developer.atlassian.com/cloud/jira/platform/swagger-v3.v3.json)).
 These changes are done in order to improve the overall usability, and as workarounds for some known language limitations.
 
-[//]: # (TODO: Add sanitation details)
 1. Removed the request body and the request body schema of the operation getIssueLimitReport (GET) ( /rest/api/3/issue/limit/report)
 2. Removed the request body of the operation searchAndReconsileIssuesUsingJql (GET) ( /rest/api/3/search/jql)
 3. Removed depricated operation getGroup (GET) (/rest/api/3/group). Available through (GET) (/rest/api/3/group/member)
@@ -29,6 +28,8 @@ These changes are done in order to improve the overall usability, and as workaro
 15. Removed depricated operation createWorkflow and WorkflowIDs, CreateWorkflowDetails schema (POST) (/rest/api/3/workflow)
 16. Removed depricated operation getAllWorkflows and DeprecatedWorkflow schema (GET) (/rest/api/3/workflow) 
 17. Removed depricated operation getAllWorkflows and DeprecatedWorkflow schema (GET) (/rest/api/3/workflow) 
+
+Details regarding deprecated operations can be accessed in [Atlassian website](https://developer.atlassian.com/cloud/jira/platform/deprecation-notice-user-privacy-api-migration-guide/).
 
 ## OpenAPI cli command
 

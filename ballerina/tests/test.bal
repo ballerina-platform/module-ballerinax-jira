@@ -85,7 +85,7 @@ function testDeleteRole() returns error? {
 function testCreateProject() returns error? {
     ProjectIdentifiers response = check jira->/rest/api/'3/project.post
     (
-        payload=
+        payload =
         {
             key: "EX",
             name: "Example",
@@ -125,8 +125,8 @@ function testGetSpecificApplicationRole() returns error? {
     string ProjectKey = "jira-software";
     ApplicationRole response = check jira->/rest/api/'3/applicationrole/[ProjectKey];
 
-    test:assertEquals(response.key, "jira-software", msg = "Expected key to be 'jira-software'");
-    test:assertEquals(response.name, "Jira Software", msg = "Expected name to be 'Jira Software'");
+    test:assertEquals(response.key, "jira-software", "Expected key to be 'jira-software'");
+    test:assertEquals(response.name, "Jira Software", "Expected name to be 'Jira Software'");
 }
 
 @test:Config {
@@ -135,7 +135,7 @@ function testGetSpecificApplicationRole() returns error? {
 function testGetAuditRecords() returns error? {
     AuditRecords response = check jira->/rest/api/'3/auditing/'record();
   
-    test:assertNotEquals(response.records, null, "Expected 'records' array to be non-empty");
+    test:assertNotEquals(response.total, 0, "Expected 'records' array to be non-empty");
 }
 
 @test:Config {
@@ -183,7 +183,7 @@ function testGetDefaultShareScope() returns error? {
     groups: ["live_tests", "mock_tests"]
 }
 function testPutDefaultShareScope() returns error? {
-    DefaultShareScope response = check jira->/rest/api/'3/filter/defaultShareScope.put(payload = {scope:"AUTHENTICATED" });
+    DefaultShareScope response = check jira->/rest/api/'3/filter/defaultShareScope.put(payload = {scope:"AUTHENTICATED"});
     
     test:assertEquals(response.scope, "AUTHENTICATED", msg = "Expected 'scope' to be 'AUTHENTICATED'");
 }

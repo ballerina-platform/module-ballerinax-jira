@@ -77,5 +77,3 @@ public function main() returns error? {
     });
     io:println("Issue created with ID: " + issue2.id.toString());
 }
-
-

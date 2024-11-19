@@ -121,7 +121,7 @@ service / on httpListener {
 
     resource function get rest/api/'3/auditing/'record(string? filter, string? 'from, string? to, int:Signed32 offset = 0, int:Signed32 'limit = 1000) returns AuditRecords|ErrorCollectionUnauthorized|ErrorCollection {
         return
-        {
+        {   "total":1,
             "records": [
                 {
                     "id": 1001,

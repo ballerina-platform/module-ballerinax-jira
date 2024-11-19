@@ -32,15 +32,15 @@ To use the Jira connector, you must have a Jira Cloud account with API access. I
 2. Click on the try cloud button under Jira
 ![{23A79CD1-8F7E-4F45-8B2E-BA695D4C60D0}](https://github.com/user-attachments/assets/4e56c9f6-b8ed-485c-9664-c8e87cbe0b02)
 
-3.Click try jira for free
+3. Click try jira for free
 
 ![Screenshot_20241109_025632](https://github.com/user-attachments/assets/57ef6b9a-7ec2-450e-9d6c-03b3c18d574d)
 
-4.Enter your email that you used previously to log into atlassian account
+4. Enter your email that you used previously to log into atlassian account
 
 ![Screenshot_20241109_025723](https://github.com/user-attachments/assets/96837650-33cd-4cd7-82ab-4557cbcfb439)
 
-5.Make sure to copy the Domain URL provided for you (Your site url)
+5. Make sure to copy the Domain URL provided for you (Your site url)
 
 ![Screenshot_20241109_030049](https://github.com/user-attachments/assets/88d814f6-e3be-41dd-aa39-7fb118e8f567)
 
