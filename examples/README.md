@@ -2,7 +2,7 @@
 
 The `ballerinax/jira` connector provides practical examples illustrating usage in various scenarios.
 
-1. [Jira-project-and-issue-management](https://github.com/ballerina-platform/module-ballerinax-jira/blob/main/examples/JiraProjectManagement/main.bal)
+1. [Jira-project-and-issue-management](https://github.com/ballerina-platform/module-ballerinax-jira/blob/main/examples/jira-project-and-issue-management/main.bal)
 
 ## Prerequisites
 1. Set Up Jira API Access
