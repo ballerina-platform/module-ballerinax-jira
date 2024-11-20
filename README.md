@@ -84,13 +84,14 @@ configurable string baseUrl = ?;
 configurable string username = ?;
 configurable string apiToken = ?;
 
-final jira:Client jiraClient = check new({
-    baseUrl: baseUrl,
-    auth: {
+jira:ConnectionConfig config = {
+    auth: <http:CredentialsConfig>
+    {
         username: username,
         password: apiToken
     }
-});
+};
+final jira:Client jira = check new (config, baseUrl);
 ```
 ### Step 3: Invoke the connector operation
 
