@@ -29,11 +29,11 @@ To use the Jira connector, you must have a Jira Cloud account with API access. I
 ### Step 2: Integrate JIRA for your account
 1. Click on the grid shaped icon in the right corner (Before Atlassian Account logo). Click on `Explore Products`.
 
-<img src=https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-jira/main/docs/setup/resources/try-jira-cloud#5.png alt="Try jira" style="width: 70%;">
+<img src=https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-jira/main/docs/setup/resources/integrate-Jira#4.png alt="Integrate Jira" style="width: 70%;">
 
 2. Click on the try cloud button under Jira.
 
-<img src=https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-jira/main/docs/setup/resources/integrate-Jira#4.png alt="Integrate Jira" style="width: 70%;">
+<img src=https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-jira/main/docs/setup/resources/try-jira-cloud#5.png alt="Try jira" style="width: 70%;">
 
 3.Click `Get Jira for free`.
 
