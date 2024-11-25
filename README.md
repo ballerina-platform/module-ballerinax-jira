@@ -101,7 +101,7 @@ Now, utilize the available connector operations.
 
 ```ballerina
 public function main() returns error? {
-    jira:ProjectRole role = check jiraClient->/rest/api/3/role.post(
+    jira:ProjectRole role = check jira->/rest/api/3/role.post(
         payload = {
             name: roleName,
             description: roleDescription

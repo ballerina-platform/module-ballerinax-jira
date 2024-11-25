@@ -22,6 +22,7 @@ import ballerina/os;
 configurable string serviceUrl =os:getEnv("SERVICE_URL"); 
 configurable string token = os:getEnv("JIRA_TOKEN");
 configurable string username = os:getEnv("JIRA_USERNAME");
+
 jira:ConnectionConfig config = {
     auth: <http:CredentialsConfig>
     {
@@ -29,6 +30,7 @@ jira:ConnectionConfig config = {
         password: token
     }
 };
+
 final jira:Client jira = check new (config, serviceUrl);
 
 public function main() returns error? {
