@@ -8,7 +8,7 @@
 
 ## Overview
 
-[Jira](https://www.atlassian.com/software/jira)  is a widely-used issue and project tracking software by Atlassian. It provides a REST API that allows applications to connect with Jira to create, update, and delete various resources, enabling efficient project and task management.
+[Jira](https://www.atlassian.com/software/jira) is a widely-used issue and project tracking software by Atlassian. It provides a REST API that allows applications to connect with Jira to create, update, and delete various resources, enabling efficient project and task management.
 
 The `ballerinax/jira` package offers APIs to interact with the [Jira REST API](https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro), providing access to various endpoints for managing issues, filters, projects, and other resources.
 
