@@ -1,4 +1,4 @@
-# Ballerina Trello connector
+# Ballerina Jira connector
 
 [![Build](https://github.com/ballerina-platform/module-ballerinax-jira/actions/workflows/ci.yml/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-jira/actions/workflows/ci.yml)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/ballerina-platform/module-ballerinax-jira.svg)](https://github.com/ballerina-platform/module-ballerinax-jira/commits/master)
@@ -18,7 +18,7 @@
 
 ## Examples
 
-The `Trello` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/module-ballerinax-jira/tree/main/examples/), covering the following use cases:
+The `Jira` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/module-ballerinax-jira/tree/main/examples/), covering the following use cases:
 
 [//]: # (TODO: Add examples)
 
