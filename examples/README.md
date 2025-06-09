@@ -2,21 +2,13 @@
 
 The `ballerinax/jira` connector provides practical examples illustrating usage in various scenarios.
 
-1. [Jira-project-and-issue-management](https://github.com/ballerina-platform/module-ballerinax-jira/blob/main/examples/jira-project-and-issue-management/main.bal)
+[//]: # (TODO: Add examples)
+1. 
+2. 
 
 ## Prerequisites
-1. Set Up Jira API Access
 
-Obtain an Atlassian API token from your Jira account by following [Atlassian's API token generation guide](https://central.ballerina.io/ballerinax/jira/latest#setup-guide).
-Note down your Jira domain (e.g., your-domain.atlassian.net), API token and username(email).
-
-2. Create a `Config.toml` file in the example’s root directory and add your Jira API credentials as shown below:
-
-```bash
-SERVICE_URL = "<Jira Cloud Domain URL>"
-JIRA_USERNAME = "<Your Atlassian Account Email>"
-JIRA_TOKEN = "<Your Jira API Token>"
-```
+[//]: # (TODO: Add prerequisites)
 
 ## Running an example
 
