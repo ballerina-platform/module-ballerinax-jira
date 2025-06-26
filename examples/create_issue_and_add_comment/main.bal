@@ -14,31 +14,23 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/auth;
 import ballerinax/jira;
 import ballerina/log;
 
-configurable string jiraToken = ?;
-configurable string jiraUsername = ?;
-configurable string jiraDomain = ?;
+configurable string password = ?;
+configurable string username = ?;
+configurable string domain = ?;
 
 string projectKey = "PID205";
 
 jira:ConnectionConfig config = {
     auth: {
-        username: jiraUsername,
-        password: jiraToken
+        username,
+        password
     }
 };
 
-auth:CredentialsConfig authHeaderConfig = {
-    username: jiraUsername,
-    password: jiraToken
-};
-final map<string|string[]> headerConfig = {
-    "Authorization": "Basic " + authHeaderConfig.toBalString()
-};
-string serviceUrl = "https://" + jiraDomain + ".atlassian.net/rest";
+string serviceUrl = "https://" + domain + ".atlassian.net/rest";
 
 jira:Client jiraClient = check new (config, serviceUrl);
 
@@ -76,6 +68,6 @@ public function main() returns error? {
 
     };
 
-    jira:Comment comment = check jiraClient->/api/'3/issue/[issueKey]/comment.post(commentPayload, headerConfig);
+    jira:Comment comment = check jiraClient->/api/'3/issue/[issueKey]/comment.post(commentPayload);
     log:printInfo("Comment added",Coments=comment.id);
 }

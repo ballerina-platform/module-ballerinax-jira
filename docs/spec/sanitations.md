@@ -21,12 +21,29 @@ These changes are done in order to improve the overall usability, and as workaro
     
     Reason: The "type" keyword needs to be escaped to compile correctly. However, in the generated code, this keyword is not escaped in this line.
 
+2. When aligning the flattened OpenAPI specification, the common segments of the resource paths are expected to be moved to the serviceUrl. However, only part of the common path is being moved, resulting in inconsistent or incomplete serviceUrl values.
+
+    Original : in Client.bal,
+        serviceUrl:
+             public isolated function init(ConnectionConfig config, string serviceUrl = "https://your-domain.atlassian.net/rest")
+
+        sample resource path:
+            resource isolated function get api/'3/myself(map<string|string[]> headers = {}, *GetCurrentUserQueries queries) returns User|error 
+
+    Updated:
+        serviceUrl:
+             public isolated function init(ConnectionConfig config, string serviceUrl = "https://your-domain.atlassian.net/rest/api/'3/")
+
+        sample resource path:
+            resource isolated function get myself(map<string|string[]> headers = {}, *GetCurrentUserQueries queries) returns User|error 
+
+Reason: To generate a client using the aligned YAML file. During the alignment of the flattened OpenAPI specification, the common segments of the resource paths are expected to be moved to the serviceUrl, while the unique segments should remain within the resources. However, only part of the common path is being moved, resulting in inconsistent or incomplete serviceUrl values
+
 ## OpenAPI cli command
 
 The following command was used to generate the Ballerina client from the OpenAPI specification. The command should be executed from the repository root directory.
 
 ```bash
-$ bal openapi flatten -i docs/spec/openapi.yaml -o docs/spec
-$ bal openapi align -i docs/spec/flattened_openapi.yaml -o docs/spec
+$ bal openapi -i docs/spec/openapi.yaml --mode client --license docs/license.txt -o ballerina
 ```
 Note: The license year is hardcoded to 2024, change if necessary.

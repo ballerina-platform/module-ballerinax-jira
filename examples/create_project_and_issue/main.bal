@@ -14,37 +14,29 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/auth;
 import ballerinax/jira;
 import ballerina/log;
 
-configurable string jiraToken = ?;
-configurable string jiraUsername = ?;
-configurable string jiraDomain = ?;
+configurable string password = ?;
+configurable string username = ?;
+configurable string domain = ?;
 
 string projectKey = "PID205";
 
 jira:ConnectionConfig config = {
     auth: {
-        username: jiraUsername,
-        password: jiraToken
+        username,
+        password
     }
 };
 
-auth:CredentialsConfig authHeaderConfig = {
-    username: jiraUsername,
-    password: jiraToken
-};
-final map<string|string[]> headerConfig = {
-    "Authorization": "Basic " + authHeaderConfig.toBalString()
-};
-string serviceUrl = "https://" + jiraDomain + ".atlassian.net/rest";
+string serviceUrl = "https://" + domain + ".atlassian.net/rest";
 
 jira:Client jiraClient = check new (config, serviceUrl);
 
 public function main() returns error? {
 
-    jira:User user = check jiraClient->/api/'3/myself.get();
+    jira:User user = check jiraClient->/api/'3/myself;
 
     string id = check user.accountId.ensureType();
     log:printInfo("userId retrieved",Id=id);

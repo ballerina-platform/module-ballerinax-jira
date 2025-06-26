@@ -8,15 +8,16 @@
 
 Jira is a powerful project management and issue tracking platform developed by Atlassian, widely used for agile software development, bug tracking, and workflow management.
 
-The ballerinax/jira package provides APIs to connect and interact with Jira’s REST API endpoints, enabling seamless integration for operations such as managing issues, projects, users, and workflows. The latest version corresponds to the REST API version 3 (Cloud), which builds upon v2 with additional support such as Atlassian Document Format (ADF) in fields like comments and descriptions.
+The `ballerinax/jira` package provides APIs to connect and interact with Jira’s REST API endpoints, enabling seamless integration for operations such as managing issues, projects, users, and workflows. The latest version corresponds to the [REST API version 3 (Cloud)](https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/), which builds upon v2 with additional support such as Atlassian Document Format (ADF) in fields like comments and descriptions.
 
 ## Setup guide
 
-To use the Jira connector, you must have access to the Atlassian API through your Atlassian account. To access premium features, a Premium subscription is required. If you do not have an account, you can sign up for one [here](https://id.atlassian.com/login?continue=https%3A%2F%2Fwww.atlassian.com%2Fgateway%2Fapi%2Fstart%2Fauthredirect).
+To use the Jira connector, you must have access to the Atlassian API through your Atlassian account. To access premium features, a Premium subscription is required. If you do not have an account, you can sign up for one [here](https://id.atlassian.com/login).
 
 ### Step 1: Create an Atlassian account
 
 1. Sign up for an account or log in to your Atlassian account
+![jira_login_screen]()
 
 <img src="docs/setup/resources/login_screen.png" width="300" height="400" style="display: block; margin-left: 56px; margin-bottom:24px; left;">
 
@@ -55,22 +56,24 @@ import ballerinax/jira;
 
 1. Create a `Config.toml` file and, configure the obtained credentials in the above steps as follows:
 
-```bash
-token = "<Access Token>"
+```toml
+username = "<your email>"
+password = "<Access Token>"
 ```
 2. Create a jira:ConnectionConfig with the obtained access token and initialize the connector with it.
 
 ```ballerina
-configurable string token = ?;
+configurable string username = ?;
+configurable string password = ?;
 
 jira:ConnectionConfig config = {
     auth: {
-        username:<"Your email Id">,
-        password:token
+        username,
+        password
     }        
 };
 
-final jira:Client jiraClient = check new(config,<"your-organization-id.atlassian.net/rest">);
+final jira:Client jiraClient = check new(config,<"your-organization-id.atlassian.net/rest/api/3">);
 ```
 
 ### Step 3: Invoke the connector operation
@@ -79,7 +82,7 @@ final jira:Client jiraClient = check new(config,<"your-organization-id.atlassian
 
 ```ballerina
 public function main() returns error? {
-    jira:User user = check jiraClient->/api/'3/myself.get();
+    jira:User user = check jiraClient->/myself;
 }
 ```
 

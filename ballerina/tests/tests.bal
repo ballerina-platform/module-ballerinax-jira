@@ -14,184 +14,185 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/test;
-import ballerina/os;
 import ballerina/auth;
+import ballerina/os;
+import ballerina/test;
 
 configurable boolean isLiveServer = os:getEnv("IS_LIVE_SERVER") == "true";
-configurable string userId = isLiveServer? os:getEnv("JIRA_USER_NAME") : "test@gmail.com";
-configurable string userApiToken = isLiveServer ? os:getEnv("JIRA_TOKEN") : "test";
-configurable string jiraDomain = isLiveServer? os:getEnv("JIRA_DOMAIN") : "";
+configurable string username = isLiveServer ? os:getEnv("JIRA_USER_NAME") : "test@gmail.com";
+configurable string password = isLiveServer ? os:getEnv("JIRA_TOKEN") : "test";
+configurable string domain = isLiveServer ? os:getEnv("JIRA_DOMAIN") : "";
 
-final string serviceUrl = isLiveServer? "https://"+ jiraDomain + ".atlassian.net/rest" : "http://localhost:9090";
+final string serviceUrl = isLiveServer ? "https://" + domain + ".atlassian.net/rest/api/3" : "http://localhost:9090";
 
 isolated string? issueId = ();
 isolated string? profileId = ();
 isolated string? projectKey = "PID205";
 
-ConnectionConfig config = {auth: {
-  username: userId,
-  password: userApiToken
-}};
+ConnectionConfig config = {
+    auth: {
+        username,
+        password
+    }
+};
 
 auth:CredentialsConfig config2 = {
-  username: userId,
-  password: userApiToken
+    username,
+    password
 };
 final readonly & map<string|string[]> header = {
-  "Authorization": "Basic "+ config2.toBalString()
+    "Authorization": "Basic " + config2.toBalString()
 };
 
-final Client jiraClient = check new(config, serviceUrl);
+final Client jiraClient = check new (config, serviceUrl);
 
-@test:Config{}
-isolated function testGetUser() returns error?{
-    User user = check jiraClient->/api/'3/myself.get();
+@test:Config {}
+isolated function testGetUser() returns error? {
+    User user = check jiraClient->/myself;
     if user.accountId is string {
-      lock {
-        profileId = <string>user.accountId;
-      }
+        lock {
+            profileId = <string>user.accountId;
+        }
     }
-    test:assertNotEquals(user.accountId,"");
+    test:assertNotEquals(user.accountId, "");
 }
 
-@test:Config{
-  dependsOn: [testGetUser],
-  groups: ["live_tests", "mock_tests"]
+@test:Config {
+    dependsOn: [testGetUser],
+    groups: ["live_tests", "mock_tests"]
 }
-isolated function testCreateProject() returns error?{
-  string prokey = "";
-  string accountId = "";
-  lock {
-    prokey = projectKey ?: "project key is null";
-  }
-  lock {
-    accountId = profileId ?: "profile id is null";
-  }
-  CreateProjectDetails payload = {
-    'key: prokey,
-    name: "Test Project For Ballerina Connector2",
-    projectTypeKey: "business",
-    leadAccountId: accountId
-  };
-  ProjectIdentifiers response = check  jiraClient-> /api/'3/project.post(payload);
-  test:assertNotEquals(response.id,"");
+isolated function testCreateProject() returns error? {
+    string prokey = "";
+    string accountId = "";
+    lock {
+        prokey = projectKey ?: "project key is null";
+    }
+    lock {
+        accountId = profileId ?: "profile id is null";
+    }
+    CreateProjectDetails payload = {
+        'key: prokey,
+        name: "Test Project For Ballerina Connector2",
+        projectTypeKey: "business",
+        leadAccountId: accountId
+    };
+    ProjectIdentifiers response = check jiraClient->/project.post(payload);
+    test:assertNotEquals(response.id, "");
 }
 
-@test:Config{
-  dependsOn: [testCreateProject],
-  groups: ["live_tests", "mock_tests"]
+@test:Config {
+    dependsOn: [testCreateProject],
+    groups: ["live_tests", "mock_tests"]
 }
-isolated function testCreateIssue() returns error?{
-  string prokey = "";
-  lock {
-    prokey = projectKey ?: "project key is null";
-  }
+isolated function testCreateIssue() returns error? {
+    string prokey = "";
+    lock {
+        prokey = projectKey ?: "project key is null";
+    }
     IssueUpdateDetails payload = {
         fields: {
-            "project": {"key":prokey},
+            "project": {"key": prokey},
             "summary": "sample test issue",
-            "description": {"type":"doc","version":1,"content":[{"type":"paragraph","content":[{"type":"text","text":"Ballerina connector sample Test Issue"}]}]},
+            "description": {"type": "doc", "version": 1, "content": [{"type": "paragraph", "content": [{"type": "text", "text": "Ballerina connector sample Test Issue"}]}]},
             "issuetype": {"name": "Task"}
         }
     };
-    CreatedIssue response = check jiraClient-> /api/'3/issue.post(payload);
+    CreatedIssue response = check jiraClient->/issue.post(payload);
     if response.id is string {
-      lock {
-        issueId = <string>response.id;
-      }
+        lock {
+            issueId = <string>response.id;
+        }
     }
-    test:assertNotEquals(response.id,"");
+    test:assertNotEquals(response.id, "");
 }
 
-//testing get issue
-@test:Config{
-  dependsOn: [testCreateIssue],
-  groups: ["live_tests", "mock_tests"]
+@test:Config {
+    dependsOn: [testCreateIssue],
+    groups: ["live_tests", "mock_tests"]
 }
-isolated function testGetIssue() returns error?{
-    
-  string id = "";
-  lock {
-    id = issueId ?: "issueId is null";
-  }
-  GetIssueQueries queries = {
-      fields: ["summery","description","status","created","project","comment"]
-  };
-  IssueBean issue = check jiraClient-> /api/'3/issue/[id].get(header,queries);
-  test:assertNotEquals(issue.key,());
-}
+isolated function testGetIssue() returns error? {
 
-@test:Config{
-  dependsOn: [testCreateProject],
-  groups: ["live_tests", "mock_tests"]
-}
-isolated function testAddActorsToProject() returns error?{
-  string prokey = "";
-  string accountId = "";
-  lock {
-    prokey = projectKey ?: "project key is null";
-  }
-  lock {
-    accountId = profileId ?: "profile id is null";
-  }
-  ActorsMap payload = {
-    user: [accountId]
-  };
-  ProjectRole role = check jiraClient->/api/'3/project/[prokey]/role/[10002].post(payload,header);
-  test:assertNotEquals(role.id,());
-}
-
-@test:Config{
-  dependsOn: [testCreateProject,testCreateIssue,testAddActorsToProject,testUpdateIssue],
-  groups: ["live_tests", "mock_tests"]
-}
-isolated function testDeleteIssue() returns error?{
     string id = "";
     lock {
-      id = issueId ?: "issueId is null";
+        id = issueId ?: "issueId is null";
     }
-  DeleteIssueQueries queries = {
-    deleteSubtasks: "true"
-  };
-    check jiraClient->/api/'3/issue/[id].delete(header,queries);
+    GetIssueQueries queries = {
+        fields: ["summery", "description", "status", "created", "project", "comment"]
+    };
+    IssueBean issue = check jiraClient->/issue/[id].get({}, queries);
+    test:assertNotEquals(issue.key, ());
+}
+
+@test:Config {
+    dependsOn: [testCreateProject],
+    groups: ["live_tests", "mock_tests"]
+}
+isolated function testAddActorsToProject() returns error? {
+    string prokey = "";
+    string accountId = "";
+    lock {
+        prokey = projectKey ?: "project key is null";
+    }
+    lock {
+        accountId = profileId ?: "profile id is null";
+    }
+    ActorsMap payload = {
+        user: [accountId]
+    };
+    ProjectRole role = check jiraClient->/project/[prokey]/role/[10002].post(payload, header);
+    test:assertNotEquals(role.id, ());
+}
+
+@test:Config {
+    dependsOn: [testCreateProject, testCreateIssue, testAddActorsToProject, testUpdateIssue],
+    groups: ["live_tests", "mock_tests"]
+}
+isolated function testDeleteIssue() returns error? {
+    string id = "";
+    lock {
+        id = issueId ?: "issueId is null";
+    }
+    DeleteIssueQueries queries = {
+        deleteSubtasks: "true"
+    };
+    check jiraClient->/issue/[id].delete(header, queries);
     test:assertTrue(true, msg = "Issue deleted successfully.");
 }
 
-@test:Config{
-  dependsOn: [testCreateProject,testCreateIssue],
-  groups: ["live_tests", "mock_tests"]
+@test:Config {
+    dependsOn: [testCreateProject, testCreateIssue],
+    groups: ["live_tests", "mock_tests"]
 }
-isolated function testUpdateIssue() returns error?{
+isolated function testUpdateIssue() returns error? {
     string id = "";
     lock {
-      id = issueId ?: "issueId is null";
+        id = issueId ?: "issueId is null";
     }
     IssueUpdateDetails payload = {
         update: {
-            "summary":[{set:"updated summery"}],
-            "description": [{set:"updated description"}]
+            "summary": [{set: "updated summery"}],
+            "description": [{set: "updated description"}]
         }
     };
-    json | error response = jiraClient-> /api/'3/issue/[id].put(payload);
+    json|error response = jiraClient->/issue/[id].put(payload);
 
     if (response is json) {
-        test:assertNotEquals(response,());
+        test:assertNotEquals(response, ());
     }
 }
 
-@test:Config{
-  dependsOn: [testDeleteIssue],
-  groups: ["live_tests", "mock_tests"]
+@test:Config {
+    dependsOn: [testDeleteIssue],
+    groups: ["live_tests", "mock_tests"]
 }
-isolated function testDeleteProject() returns error?{
-  string prokey = "";
-  lock {
-    prokey = projectKey ?: "project key is null";
-  }
-  DeleteProjectQueries queries = {
-    enableUndo: false
-  };
-  check jiraClient->/api/'3/project/[prokey].delete(header,queries);
-  test:assertTrue(true, msg = "Project deleted successfully.");
+isolated function testDeleteProject() returns error? {
+    string prokey = "";
+    lock {
+        prokey = projectKey ?: "project key is null";
+    }
+    DeleteProjectQueries queries = {
+        enableUndo: false
+    };
+    check jiraClient->/project/[prokey].delete(header, queries);
+    test:assertTrue(true, msg = "Project deleted successfully.");
 }

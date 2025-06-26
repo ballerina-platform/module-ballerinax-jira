@@ -1,14 +1,8 @@
 [package]
-org = "lasith"
+org = "wso2"
 name = "create_issue_and_add_comment"
 version = "0.1.0"
 distribution = "2201.12.7"
 
 [build-options]
 observabilityIncluded = true
-
-[[dependency]]
-org = "ballerinax"
-name = "jira"
-version = "2.0.0"
-repository="local"
