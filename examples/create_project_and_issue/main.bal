@@ -53,10 +53,28 @@ public function main() returns error? {
 
     jira:IssueUpdateDetails issuePayload = {
         fields: {
-            "project": {"key":project.key},
+            "project": {
+                key: project.key
+            },
             "summary": "sample test issue",
-            "description": {"type":"doc","version":1,"content":[{"type":"paragraph","content":[{"type":"text","text":"Ballerina connector sample Test Issue"}]}]},
-            "issuetype": {"name": "Task"}
+            "description": {
+                'type: "doc",
+                version: 1,
+                content: [
+                    {
+                        'type: "paragraph",
+                        content: [
+                            {
+                                'type: "text",
+                                text: "Ballerina connector sample Test Issue"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "issuetype": {
+                name: "Task"
+            }
         }
     };
 

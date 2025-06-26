@@ -12,25 +12,29 @@ To use the Jira connector, you must have access to the Atlassian API through you
 
 1. Sign up for an account or log in to your Atlassian account
 
-<img src="../docs/setup/resources/login_screen.png" width="300" height="400" style="display: block; margin-left: 56px; margin-bottom:24px; left;">
+![Jira login screen](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-jira/main/docs/setup/resources/login_screen.png)
 
 2. You will be redirected after a successful login.
 
-<img src="../docs/setup/resources/redirect_login.png" width="600" height="300" style="display: block; margin-left: 56px; margin-bottom:24px; left;">
+![Jira redirect screen](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-jira/main/docs/setup/resources/redirect_login.png)
 
 ### Step 2: Create API token
 
 1. Click on **account settings**
-<img src="../docs/setup/resources/path_account_settings.png" width="600" height="300" style="display: block; margin-left: 56px; margin-bottom:24px; left;">
+
+![Jira account settings path](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-jira/main/docs/setup/resources/path_account_settings.png)
 
 2. Click on **security** tab
-<img src="../docs/setup/resources/account_settings.png" width="600" height="200" style="display: block; margin-left: 56px; margin-bottom:24px; left;">
+
+![Jira account settings](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-jira/main/docs/setup/resources/account_settings.png)
 
 3. Click on **Create and manage API tokens**
-<img src="../docs/setup/resources/click_on_token.png" width="600" height="300" style="display: block; margin-left: 56px; margin-bottom:24px; left;">
+
+![Jira Token](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-jira/main/docs/setup/resources/click_on_token.png)
 
 4. Create API token
-<img src="../docs/setup/resources/create_token.png" width="600" height="200" style="display: block; margin-left: 56px; margin-bottom:24px; left;">
+
+![Create Token](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-jira/main/docs/setup/resources/create_token.png)
 
 5. Store the access token securely for use in your application.
 
@@ -90,5 +94,5 @@ bal run
 
 The `Jira` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/module-ballerinax-jira/tree/main/examples/), covering the following use cases:
 
-1. [Create Project and Issue](../examples/create_project_and_issue/)
-2. [Create Issue and Add Comment](../examples/create_issue_and_add_comment/)
+1. [Create Project and Issue](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-jira/main/examples/create_project_and_issue/)
+2. [Create Issue and Add Comment](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-jira/main/examples/create_issue_and_add_comment/)
