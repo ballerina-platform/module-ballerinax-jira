@@ -15,13 +15,12 @@
 // under the License.
 
 import ballerinax/jira;
-import ballerina/log;
+import ballerina/io;
 
-configurable string password = ?;
-configurable string username = ?;
-configurable string domain = ?;
-
-string projectKey = "PID205";
+configurable string password = "test-token";
+configurable string username = "test-user";
+configurable string domain = "test-domain";
+configurable string projectKey = "PID205";
 
 jira:ConnectionConfig config = {
     auth: {
@@ -30,16 +29,16 @@ jira:ConnectionConfig config = {
     }
 };
 
-string serviceUrl = "https://" + domain + ".atlassian.net/rest";
+string serviceUrl = "https://" + domain + ".atlassian.net/rest/api/3";
 
 jira:Client jiraClient = check new (config, serviceUrl);
 
 public function main() returns error? {
 
-    jira:User user = check jiraClient->/api/'3/myself;
+    jira:User user = check jiraClient->/myself;
 
     string id = check user.accountId.ensureType();
-    log:printInfo("userId retrieved",Id=id);
+    io:println(`User id retrieved: ${id}`);
 
     jira:CreateProjectDetails payload = {
         'key: projectKey,
@@ -48,8 +47,8 @@ public function main() returns error? {
         leadAccountId: id
     };
 
-    jira:ProjectIdentifiers project = check jiraClient->/api/'3/project.post(payload);
-    log:printInfo("New project created",Projects = project.'key);
+    jira:ProjectIdentifiers project = check jiraClient->/project.post(payload);
+    io:println(`Project created: ${project.id}`);
 
     jira:IssueUpdateDetails issuePayload = {
         fields: {
@@ -78,6 +77,6 @@ public function main() returns error? {
         }
     };
 
-    jira:CreatedIssue issue = check jiraClient->/api/'3/issue.post(issuePayload);
-    log:printInfo("New Issue added",IssueCreated=issue.'key, Projects=project.'key);
+    jira:CreatedIssue issue = check jiraClient->/issue.post(issuePayload);
+    io:println(`New issue created: ${issue.id}`);
 }

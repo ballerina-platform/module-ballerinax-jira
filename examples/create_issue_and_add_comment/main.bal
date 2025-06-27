@@ -14,14 +14,13 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import ballerina/io;
 import ballerinax/jira;
-import ballerina/log;
 
-configurable string password = ?;
-configurable string username = ?;
-configurable string domain = ?;
-
-string projectKey = "PID205";
+configurable string password = "test-token";
+configurable string username = "test-user";
+configurable string domain = "test-domain";
+configurable string projectKey = "PID205";
 
 jira:ConnectionConfig config = {
     auth: {
@@ -30,29 +29,45 @@ jira:ConnectionConfig config = {
     }
 };
 
-string serviceUrl = "https://" + domain + ".atlassian.net/rest";
+string serviceUrl = "https://" + domain + ".atlassian.net/rest/api/3";
 
 jira:Client jiraClient = check new (config, serviceUrl);
 
 public function main() returns error? {
 
-    jira:User user = check jiraClient->/api/'3/myself.get();
+    jira:User user = check jiraClient->/myself;
 
     string id = check user.accountId.ensureType();
-    log:printInfo("user id retrieved : ", UserId=id);
+    io:println(`User id retrieved: ${id}`);
 
     jira:IssueUpdateDetails issuePayload = {
         fields: {
             "project": {"key": projectKey},
             "summary": "2nd sample issue",
-            "description": {"type": "doc", "version": 1, "content": [{"type": "paragraph", "content": [{"type": "text", "text": "Ballerina connector sample issue (type:task)02"}]}]},
-            "issuetype": {"name": "Task"}
+            "description": {
+                'type: "doc",
+                version: 1,
+                content: [
+                    {
+                        'type: "paragraph",
+                        content: [
+                            {
+                                'type: "text",
+                                text: "Ballerina connector sample issue (type:task)02"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "issuetype": {
+                name: "Task"
+            }
         }
     };
 
-    jira:CreatedIssue issue = check jiraClient->/api/'3/issue.post(issuePayload);
-    log:printInfo("Issue added to the project", IssueId = issue.id);
-    
+    jira:CreatedIssue issue = check jiraClient->/issue.post(issuePayload);
+    io:println(`New issue added: ${issue.id}`);
+
     string issueKey = check issue.key.ensureType();
 
     jira:Comment commentPayload = {
@@ -63,11 +78,20 @@ public function main() returns error? {
         body: {
             "type": "doc",
             "version": 1,
-            "content": [{"type": "paragraph", "content": [{"type": "text", "text": "Ballerina connector sample issue (type:task)-02"}]}]
+            "content": [
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Ballerina connector sample issue (type:task)-02"
+                        }
+                    ]
+                }
+            ]
         }
-
     };
 
-    jira:Comment comment = check jiraClient->/api/'3/issue/[issueKey]/comment.post(commentPayload);
-    log:printInfo("Comment added",Coments=comment.id);
+    jira:Comment comment = check jiraClient->/issue/[issueKey]/comment.post(commentPayload);
+    io:println(`comment added: ${comment.id}`);
 }
