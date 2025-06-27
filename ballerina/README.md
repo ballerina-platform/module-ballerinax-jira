@@ -1,6 +1,6 @@
 ## Overview
 
-Jira is a powerful project management and issue tracking platform developed by Atlassian, widely used for agile software development, bug tracking, and workflow management.
+[Jira](https://www.atlassian.com/software/jira) is a powerful project management and issue tracking platform developed by Atlassian, widely used for agile software development, bug tracking, and workflow management.
 
 The `ballerinax/jira` package provides APIs to connect and interact with Jira’s REST API endpoints, enabling seamless integration for operations such as managing issues, projects, users, and workflows. The latest version corresponds to the [REST API version 3 (Cloud)](https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/), which builds upon v2 with additional support such as Atlassian Document Format (ADF) in fields like comments and descriptions.
 
