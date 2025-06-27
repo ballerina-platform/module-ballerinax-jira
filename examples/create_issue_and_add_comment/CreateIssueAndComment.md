@@ -15,6 +15,7 @@ Create a Config.toml file in the example's root directory and provide your Jira 
 username = "<Your Jira Account Email>"
 password = "<Your Jira API Token>"
 domain = "<Your Jira Cloud Domain, e.g., 'your-company'>"
+projectKey = "<Your project Id to create Project. 'PD67'>"
 ```
 
 
@@ -24,7 +25,9 @@ domain = "<Your Jira Cloud Domain, e.g., 'your-company'>"
 
 - domain: The subdomain of your Jira Cloud instance (e.g., if your Jira URL is https://your-company.atlassian.net, the domain is your-company).
 
-The projectKey (e.g., "PID205") is currently hardcoded in the main.bal file. Ensure this matches a valid project key in your Jira instance where you have permissions to create issues.
+- projectKey: Your project ID to create the project (e.g., 'PD67').
+
+Ensure that the projectKey is unique and not already in use in your Jira instance, as attempting to create a project with an existing key will result in an error. Also, ensure the leadAccountId is correctly retrieved for the user.
 
 Run the example
 Execute the following command to run the example:
