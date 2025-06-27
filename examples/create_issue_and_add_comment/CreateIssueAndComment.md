@@ -19,13 +19,6 @@ projectKey = "<Your project Id to create Project. 'PD67'>"
 ```
 
 
-- username: Your email address used to log in to Jira.
-
-- password: The API token generated from your Atlassian account.
-
-- domain: The subdomain of your Jira Cloud instance (e.g., if your Jira URL is https://your-company.atlassian.net, the domain is your-company).
-
-- projectKey: Your project ID to create the project (e.g., 'PD67').
 
 Ensure that the projectKey is unique and not already in use in your Jira instance, as attempting to create a project with an existing key will result in an error. Also, ensure the leadAccountId is correctly retrieved for the user.
 
