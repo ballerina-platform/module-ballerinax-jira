@@ -30,24 +30,6 @@ Create a `Config.toml` file in the tests directory and the following content:
 ```toml
 isLiveServer = false
 ```
-
-#### Using Environment Variables
-
-Alternatively, you can set your authentication credentials as environment variables:
-If you are using linux or mac, you can use following method:
-```bash
-   export IS_LIVE_SERVER=false
-```
-If you are using Windows you can use following method:
-```bash
-   setx IS_LIVE_SERVER false
-```
-Then, run the following command to run the tests:
-
-```bash
-   ./gradlew clean test
-```
-
 ## Running Tests Against Jira Live API
 
 #### Using a Config.toml File
@@ -55,32 +37,8 @@ Then, run the following command to run the tests:
 Create a `Config.toml` file in the tests directory and add your authentication credentials a
 
 ```toml
-   isLiveServer = true
-   userApiToken = "<your-jira-access-token>"
-   userId = "<your-jira-user-email>"
-   jiraDomain = "<first-part-of-your-jira-organization-id (example in example.atlassian.com)>"
-```
-
-#### Using Environment Variables
-
-Alternatively, you can set your authentication credentials as environment variables:
-If you are using linux or mac, you can use following method:
-```bash
-   export IS_LIVE_SERVER=true
-   export JIRA_TOKEN ="<your-jira-access-token>"
-   export JIRA_USER_NAME ="<your-jira-user-email>"
-   export JIRA_DOMAIN ="<your-jira-organization-id>"
-```
-
-If you are using Windows you can use following method:
-```bash
-   setx IS_LIVE_SERVER true
-   setx JIRA_TOKEN <your-jira-access-token>
-   setx JIRA_USER_NAME  <your-jira-user-email>
-   setx JIRA_DOMAIN  <your-jira-organization-id>
-```
-Then, run the following command to run the tests:
-
-```bash
-   ./gradlew clean test 
+isLiveServer = true;
+username = "<Your Jira Account Email>"
+password = "<Your Jira API Token>"
+domain = "<Your Jira Cloud Domain, e.g., 'your-company'>"
 ```
