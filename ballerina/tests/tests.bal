@@ -14,14 +14,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/auth;
-import ballerina/os;
 import ballerina/test;
 
-configurable boolean isLiveServer = os:getEnv("IS_LIVE_SERVER") == "true";
-configurable string username = isLiveServer ? os:getEnv("JIRA_USER_NAME") : "test@gmail.com";
-configurable string password = isLiveServer ? os:getEnv("JIRA_TOKEN") : "test";
-configurable string domain = isLiveServer ? os:getEnv("JIRA_DOMAIN") : "";
+configurable boolean isLiveServer = false;
+configurable string username = "user";
+configurable string password = "test";
+configurable string domain = "";
 
 final string serviceUrl = isLiveServer ? "https://" + domain + ".atlassian.net/rest/api/3" : "http://localhost:9090";
 
@@ -34,14 +32,6 @@ ConnectionConfig config = {
         username,
         password
     }
-};
-
-auth:CredentialsConfig config2 = {
-    username,
-    password
-};
-final readonly & map<string|string[]> header = {
-    "Authorization": "Basic " + config2.toBalString()
 };
 
 final Client jiraClient = check new (config, serviceUrl);
@@ -139,7 +129,7 @@ isolated function testAddActorsToProject() returns error? {
     ActorsMap payload = {
         user: [accountId]
     };
-    ProjectRole role = check jiraClient->/project/[prokey]/role/[10002].post(payload, header);
+    ProjectRole role = check jiraClient->/project/[prokey]/role/[10002].post(payload);
     test:assertNotEquals(role.id, ());
 }
 
@@ -155,7 +145,7 @@ isolated function testDeleteIssue() returns error? {
     DeleteIssueQueries queries = {
         deleteSubtasks: "true"
     };
-    check jiraClient->/issue/[id].delete(header, queries);
+    check jiraClient->/issue/[id].delete({}, queries);
     test:assertTrue(true, msg = "Issue deleted successfully.");
 }
 
@@ -193,6 +183,6 @@ isolated function testDeleteProject() returns error? {
     DeleteProjectQueries queries = {
         enableUndo: false
     };
-    check jiraClient->/project/[prokey].delete(header, queries);
+    check jiraClient->/project/[prokey].delete({}, queries);
     test:assertTrue(true, msg = "Project deleted successfully.");
 }
