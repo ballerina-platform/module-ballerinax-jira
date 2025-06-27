@@ -17,6 +17,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+
 import ballerina/constraint;
 import ballerina/data.jsondata;
 import ballerina/http;
@@ -115,14 +116,6 @@ public type AvailableWorkflowForgeRule record {|
     string ruleKey?;
 |};
 
-# Properties that identify a workflow
-public type WorkflowId record {|
-    # Whether the workflow is in the draft state
-    boolean draft;
-    # The name of the workflow
-    string name;
-|};
-
 # Represents the Queries record for the operation: getNotificationSchemeToProjectMappings
 public type GetNotificationSchemeToProjectMappingsQueries record {
     # The list of notifications scheme IDs to be filtered out
@@ -134,6 +127,14 @@ public type GetNotificationSchemeToProjectMappingsQueries record {
     # The index of the first item to return in a page of results (page offset)
     string startAt = "0";
 };
+
+# Properties that identify a workflow
+public type WorkflowId record {|
+    # Whether the workflow is in the draft state
+    boolean draft;
+    # The name of the workflow
+    string name;
+|};
 
 # The workflow transition rule conditions tree
 public type WorkflowCondition WorkflowSimpleCondition|WorkflowCompoundCondition;
@@ -173,6 +174,15 @@ public type GetAttachmentContentQueries record {
     boolean redirect = true;
 };
 
+# The default text for a Forge string custom field
+public type CustomFieldContextDefaultValueForgeStringField record {
+    # The ID of the context
+    string contextId;
+    # The default text. The maximum length is 254 characters
+    string text?;
+    string 'type;
+};
+
 # Details of the options for a select list issue field
 public type IssueFieldOption record {|
     # The unique identifier for the option. This is only unique within the select field's set of options
@@ -184,15 +194,6 @@ public type IssueFieldOption record {|
     # The properties of the object, as arbitrary key-value pairs. These properties can be searched using JQL, if the extractions (see [Issue Field Option Property Index](https://developer.atlassian.com/cloud/jira/platform/modules/issue-field-option-property-index/)) are defined in the descriptor for the issue field module
     record {} properties?;
 |};
-
-# The default text for a Forge string custom field
-public type CustomFieldContextDefaultValueForgeStringField record {
-    # The ID of the context
-    string contextId;
-    # The default text. The maximum length is 254 characters
-    string text?;
-    string 'type;
-};
 
 # The status of the item
 public type Status record {
@@ -226,17 +227,17 @@ public type ResolutionJsonBean record {|
     string id?;
 |};
 
+# List of pairs (id and value) for precomputation updates
+public type JqlFunctionPrecomputationUpdateRequestBean record {|
+    JqlFunctionPrecomputationUpdateBean[] values?;
+|};
+
 # List of issues and JQL queries
 public type IssuesAndJQLQueries record {|
     # A list of issue IDs
     int[] issueIds;
     # A list of JQL queries
     string[] jqls;
-|};
-
-# List of pairs (id and value) for precomputation updates
-public type JqlFunctionPrecomputationUpdateRequestBean record {|
-    JqlFunctionPrecomputationUpdateBean[] values?;
 |};
 
 # Represents the Queries record for the operation: getUserProperty
@@ -258,6 +259,10 @@ public type GetProjectUsagesForWorkflowQueries record {
     int:Signed32 maxResults = 50;
 };
 
+public type JiraVersionField record {|
+    string versionId?;
+|};
+
 # Represents the Queries record for the operation: updateWorklog
 public type UpdateWorklogQueries record {
     # The value to set as the issue's remaining time estimate, as days (\#d), hours (\#h), or minutes (\#m or \#). For example, *2d*. Required when `adjustEstimate` is `new`
@@ -275,10 +280,6 @@ public type UpdateWorklogQueries record {
     # Whether users watching the issue are notified by email
     boolean notifyUsers = true;
 };
-
-public type JiraVersionField record {|
-    string versionId?;
-|};
 
 public type SimpleListWrapperGroupName record {|
     ListWrapperCallbackGroupName pagingCallback?;
@@ -454,24 +455,6 @@ public type WebhookDetails record {|
     ("jira:issue_created"|"jira:issue_updated"|"jira:issue_deleted"|"comment_created"|"comment_updated"|"comment_deleted"|"issue_property_set"|"issue_property_deleted")[] events;
 |};
 
-# Represents the Queries record for the operation: searchPriorities
-public type SearchPrioritiesQueries record {
-    # The name of priority to search for
-    string priorityName = "";
-    # Use `schemes` to return the associated priority schemes for each priority. Limited to returning first 15 priority schemes per priority
-    string expand = "";
-    # Whether only the default priority is returned
-    boolean onlyDefault = false;
-    # The maximum number of items to return per page
-    string maxResults = "50";
-    # The list of priority IDs. To include multiple IDs, provide an ampersand-separated list. For example, `id=2&id=3`
-    string[] id?;
-    # The list of projects IDs. To include multiple IDs, provide an ampersand-separated list. For example, `projectId=10010&projectId=10111`
-    string[] projectId?;
-    # The index of the first item to return in a page of results (page offset)
-    string startAt = "0";
-};
-
 # Details of a permission scheme
 public type PermissionScheme record {
     # A description for the permission scheme.
@@ -488,6 +471,24 @@ public type PermissionScheme record {
     Scope scope?;
     # The URL of the permission scheme.
     string self?;
+};
+
+# Represents the Queries record for the operation: searchPriorities
+public type SearchPrioritiesQueries record {
+    # The name of priority to search for
+    string priorityName = "";
+    # Use `schemes` to return the associated priority schemes for each priority. Limited to returning first 15 priority schemes per priority
+    string expand = "";
+    # Whether only the default priority is returned
+    boolean onlyDefault = false;
+    # The maximum number of items to return per page
+    string maxResults = "50";
+    # The list of priority IDs. To include multiple IDs, provide an ampersand-separated list. For example, `id=2&id=3`
+    string[] id?;
+    # The list of projects IDs. To include multiple IDs, provide an ampersand-separated list. For example, `projectId=10010&projectId=10111`
+    string[] projectId?;
+    # The index of the first item to return in a page of results (page offset)
+    string startAt = "0";
 };
 
 # A page of items
@@ -508,6 +509,12 @@ public type PageBeanContext record {|
     int startAt?;
 |};
 
+# Details of a field configuration to issue type mappings
+public type AssociateFieldConfigurationsWithIssueTypesRequest record {|
+    # Field configuration to issue type mappings
+    FieldConfigurationToIssueTypeMapping[] mappings;
+|};
+
 public type CreatePlanRequest record {|
     # The cross-project releases to include in the plan
     CreateCrossProjectReleaseRequest[] crossProjectReleases?;
@@ -526,12 +533,6 @@ public type CreatePlanRequest record {|
     string leadAccountId?;
     # The exclusion rules for the plan
     CreateExclusionRulesRequest exclusionRules?;
-|};
-
-# Details of a field configuration to issue type mappings
-public type AssociateFieldConfigurationsWithIssueTypesRequest record {|
-    # Field configuration to issue type mappings
-    FieldConfigurationToIssueTypeMapping[] mappings;
 |};
 
 public type GetPlanOnlyTeamResponse record {|
@@ -802,14 +803,6 @@ public type ProjectRole record {|
     string translatedName?;
 |};
 
-# A workflow transition
-public type WorkflowTransition record {|
-    # The transition name
-    string name;
-    # The transition ID
-    int:Signed32 id;
-|};
-
 public type IssueTypeUpdateBean record {|
     # The ID of an issue type avatar. This can be obtained be obtained from the following endpoints:
     # 
@@ -820,6 +813,14 @@ public type IssueTypeUpdateBean record {|
     string name?;
     # The description of the issue type
     string description?;
+|};
+
+# A workflow transition
+public type WorkflowTransition record {|
+    # The transition name
+    string name;
+    # The transition ID
+    int:Signed32 id;
 |};
 
 # Represents the Queries record for the operation: createDashboard
@@ -860,6 +861,15 @@ public type CustomFieldContextDefaultValueForgeUserField record {
     string 'type;
 };
 
+# The default value for a multiple group picker custom field
+public type CustomFieldContextDefaultValueMultipleGroupPicker record {
+    # The IDs of the default groups
+    string[] groupIds;
+    # The ID of the context
+    string contextId;
+    string 'type;
+};
+
 # A page of changelogs
 public type PageOfChangelogs record {|
     # The number of results on the page
@@ -871,15 +881,6 @@ public type PageOfChangelogs record {|
     # The index of the first item returned on the page
     int:Signed32 startAt?;
 |};
-
-# The default value for a multiple group picker custom field
-public type CustomFieldContextDefaultValueMultipleGroupPicker record {
-    # The IDs of the default groups
-    string[] groupIds;
-    # The ID of the context
-    string contextId;
-    string 'type;
-};
 
 # Status mapping for statuses in source workflow to respective target status in target workflow
 public type TargetStatus record {|
@@ -980,6 +981,10 @@ public type CustomFieldContextUpdateDetails record {|
     string description?;
 |};
 
+public type JiraTimeTrackingField record {|
+    string timeRemaining;
+|};
+
 # Details of the status being created
 public type StatusCreate record {|
     # The name of the status
@@ -989,10 +994,6 @@ public type StatusCreate record {|
     string description?;
     # The category of the status
     "TODO"|"IN_PROGRESS"|"DONE" statusCategory;
-|};
-
-public type JiraTimeTrackingField record {|
-    string timeRemaining;
 |};
 
 # Details about a workflow
@@ -1014,12 +1015,6 @@ public type DeprecatedWorkflow record {|
     int:Signed32 steps?;
 |};
 
-# Represents the Queries record for the operation: createPlan
-public type CreatePlanQueries record {
-    # Whether to accept group IDs instead of group names. Group names are deprecated
-    boolean useGroupId = false;
-};
-
 # Bulk Edit Get Fields Response
 public type BulkEditGetFields record {|
     # The start cursor for use in pagination
@@ -1029,6 +1024,21 @@ public type BulkEditGetFields record {|
     # List of all the fields
     IssueBulkEditField[] fields?;
 |};
+
+# Represents the Queries record for the operation: createPlan
+public type CreatePlanQueries record {
+    # Whether to accept group IDs instead of group names. Group names are deprecated
+    boolean useGroupId = false;
+};
+
+# The default value for a group picker custom field
+public type CustomFieldContextDefaultValueSingleGroupPicker record {
+    # The ID of the the default group
+    string groupId;
+    # The ID of the context
+    string contextId;
+    string 'type;
+};
 
 # Represents the Queries record for the operation: getIssueWorklog
 public type GetIssueWorklogQueries record {
@@ -1042,15 +1052,6 @@ public type GetIssueWorklogQueries record {
     int startAt = 0;
     # The worklog start date and time, as a UNIX timestamp in milliseconds, before which worklogs are returned
     int startedBefore?;
-};
-
-# The default value for a group picker custom field
-public type CustomFieldContextDefaultValueSingleGroupPicker record {
-    # The ID of the the default group
-    string groupId;
-    # The ID of the context
-    string contextId;
-    string 'type;
 };
 
 public type IssueBulkOperationsFieldOption record {|
@@ -1110,6 +1111,21 @@ public type CreateCustomFieldRequest record {|
     int customFieldId;
 |};
 
+# Request bean for bulk changelog retrieval
+public type BulkChangelogRequestBean record {|
+    # The maximum number of items to return per page
+    @constraint:Int {minValue: 1, maxValue: 10000}
+    int:Signed32 maxResults = 1000;
+    # The cursor for pagination
+    string nextPageToken?;
+    # List of issue IDs/keys to fetch changelogs for
+    @constraint:Array {maxLength: 1000, minLength: 1}
+    string[] issueIdsOrKeys;
+    # List of field IDs to filter changelogs
+    @constraint:Array {maxLength: 10}
+    string[] fieldIds?;
+|};
+
 # Container for a list of webhook IDs
 public type ContainerForWebhookIDs record {|
     # A list of webhook IDs
@@ -1136,21 +1152,6 @@ public type GetWorkflowTransitionRuleConfigurationsQueries record {
     # The index of the first item to return in a page of results (page offset)
     int startAt = 0;
 };
-
-# Request bean for bulk changelog retrieval
-public type BulkChangelogRequestBean record {|
-    # The maximum number of items to return per page
-    @constraint:Int {minValue: 1, maxValue: 10000}
-    int:Signed32 maxResults = 1000;
-    # The cursor for pagination
-    string nextPageToken?;
-    # List of issue IDs/keys to fetch changelogs for
-    @constraint:Array {maxLength: 1000, minLength: 1}
-    string[] issueIdsOrKeys;
-    # List of field IDs to filter changelogs
-    @constraint:Array {maxLength: 10}
-    string[] fieldIds?;
-|};
 
 # Represents the Queries record for the operation: ServiceRegistryResource.services_get
 public type ServiceRegistryResourceServicesGetQueries record {
@@ -1182,12 +1183,6 @@ public type Icon record {
     string title?;
     # The URL of an icon that displays at 16x16 pixel in Jira.
     string url16x16?;
-};
-
-# Represents the Queries record for the operation: updateDraftWorkflowMapping
-public type UpdateDraftWorkflowMappingQueries record {
-    # The name of the workflow
-    string workflowName;
 };
 
 public type SearchRequestBean record {|
@@ -1244,19 +1239,15 @@ public type SearchRequestBean record {|
     int:Signed32 startAt?;
 |};
 
+# Represents the Queries record for the operation: updateDraftWorkflowMapping
+public type UpdateDraftWorkflowMappingQueries record {
+    # The name of the workflow
+    string workflowName;
+};
+
 public type AddFieldBean record {|
     # The ID of the field to add
     string fieldId;
-|};
-
-# Bulk operation filter details
-public type IssueFilterForBulkPropertySet record {|
-    # Whether the bulk operation occurs only when the property is present on or absent from an issue
-    boolean hasProperty?;
-    # The value of properties to perform the bulk operation on
-    anydata currentValue?;
-    # List of issues to perform the bulk operation on
-    int[] entityIds?;
 |};
 
 # A field within a field configuration
@@ -1271,6 +1262,16 @@ public type FieldConfigurationItem record {|
     string id;
     # Whether the field is hidden in the field configuration
     boolean isHidden?;
+|};
+
+# Bulk operation filter details
+public type IssueFilterForBulkPropertySet record {|
+    # Whether the bulk operation occurs only when the property is present on or absent from an issue
+    boolean hasProperty?;
+    # The value of properties to perform the bulk operation on
+    anydata currentValue?;
+    # List of issues to perform the bulk operation on
+    int[] entityIds?;
 |};
 
 # Represents the Queries record for the operation: storeAvatar
@@ -1366,14 +1367,8 @@ public type CustomFieldOption record {|
     string value?;
 |};
 
-# The statuses the transition can start from, and the mapping of ports between the statuses
-public type WorkflowTransitionLinks record {|
-    # The port that the transition starts from
-    int:Signed32? fromPort?;
-    # The port that the transition goes to
-    int:Signed32? toPort?;
-    # The status that the transition starts from
-    string? fromStatusReference?;
+public type JiraRichTextInput record {|
+    record {} adfValue?;
 |};
 
 # The project and issue type mapping
@@ -1384,8 +1379,14 @@ public type ProjectIssueTypeMapping record {|
     string projectId;
 |};
 
-public type JiraRichTextInput record {|
-    record {} adfValue?;
+# The statuses the transition can start from, and the mapping of ports between the statuses
+public type WorkflowTransitionLinks record {|
+    # The port that the transition starts from
+    int:Signed32? fromPort?;
+    # The port that the transition goes to
+    int:Signed32? toPort?;
+    # The status that the transition starts from
+    string? fromStatusReference?;
 |};
 
 # OAuth2 Refresh Token Grant Configs
@@ -1468,6 +1469,24 @@ public type FieldCreateMetadata record {|
     string fieldId;
 |};
 
+# Represents the Queries record for the operation: getTrashedFieldsPaginated
+public type GetTrashedFieldsPaginatedQueries record {
+    "name"|"-name"|"+name"|"trashDate"|"-trashDate"|"+trashDate"|"plannedDeletionDate"|"-plannedDeletionDate"|"+plannedDeletionDate"|"projectsCount"|"-projectsCount"|"+projectsCount" expand?;
+    # The maximum number of items to return per page
+    int:Signed32 maxResults = 50;
+    # String used to perform a case-insensitive partial match with field names or descriptions
+    string query?;
+    # [Order](#ordering) the results by a field:
+    # 
+    #  *  `name` sorts by the field name
+    #  *  `trashDate` sorts by the date the field was moved to the trash
+    #  *  `plannedDeletionDate` sorts by the planned deletion date
+    string orderBy?;
+    string[] id?;
+    # The index of the first item to return in a page of results (page offset)
+    int startAt = 0;
+};
+
 # The details of a workflow transition rules
 public type CreateWorkflowTransitionRulesDetails record {|
     # The workflow post functions.
@@ -1534,24 +1553,6 @@ public type CreateWorkflowTransitionRulesDetails record {|
     # The workflow conditions
     CreateWorkflowCondition conditions?;
 |};
-
-# Represents the Queries record for the operation: getTrashedFieldsPaginated
-public type GetTrashedFieldsPaginatedQueries record {
-    "name"|"-name"|"+name"|"trashDate"|"-trashDate"|"+trashDate"|"plannedDeletionDate"|"-plannedDeletionDate"|"+plannedDeletionDate"|"projectsCount"|"-projectsCount"|"+projectsCount" expand?;
-    # The maximum number of items to return per page
-    int:Signed32 maxResults = 50;
-    # String used to perform a case-insensitive partial match with field names or descriptions
-    string query?;
-    # [Order](#ordering) the results by a field:
-    # 
-    #  *  `name` sorts by the field name
-    #  *  `trashDate` sorts by the date the field was moved to the trash
-    #  *  `plannedDeletionDate` sorts by the planned deletion date
-    string orderBy?;
-    string[] id?;
-    # The index of the first item to return in a page of results (page offset)
-    int startAt = 0;
-};
 
 # Details of the identifiers for a created or updated remote issue link
 public type RemoteIssueLinkIdentifies record {|
@@ -1676,16 +1677,6 @@ public type PageBean2JqlFunctionPrecomputationBean record {|
     int startAt?;
 |};
 
-# Defines the payload for the field layout configuration. See https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issue-field-configurations/\#api-rest-api-3-fieldconfiguration-post
-public type FieldLayoutConfiguration record {|
-    # Whether to show the field
-    boolean 'field?;
-    # Every project-created entity has an ID that must be unique within the scope of the project creation. PCRI (Project Create Resource Identifier) is a standard format for creating IDs and references to other project entities. PCRI format is defined as follows: pcri:\[entityType\]:\[type\]:\[entityId\] entityType - the type of an entity, e.g. status, role, workflow type - PCRI type, either `id` - The ID of an entity that already exists in the target site, or `ref` - A unique reference to an entity that is being created entityId - entity identifier, if type is `id` - must be an existing entity ID that exists in the Jira site, if `ref` - must be unique across all entities in the scope of this project template creation
-    ProjectCreateResourceIdentifier pcri?;
-    # Whether the field is required
-    boolean required?;
-|};
-
 # A page of items
 public type PageBeanIssueTypeSchemeMapping record {|
     # The number of items returned
@@ -1704,6 +1695,16 @@ public type PageBeanIssueTypeSchemeMapping record {|
     int startAt?;
 |};
 
+# Defines the payload for the field layout configuration. See https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issue-field-configurations/\#api-rest-api-3-fieldconfiguration-post
+public type FieldLayoutConfiguration record {|
+    # Whether to show the field
+    boolean 'field?;
+    # Every project-created entity has an ID that must be unique within the scope of the project creation. PCRI (Project Create Resource Identifier) is a standard format for creating IDs and references to other project entities. PCRI format is defined as follows: pcri:\[entityType\]:\[type\]:\[entityId\] entityType - the type of an entity, e.g. status, role, workflow type - PCRI type, either `id` - The ID of an entity that already exists in the target site, or `ref` - A unique reference to an entity that is being created entityId - entity identifier, if type is `id` - must be an existing entity ID that exists in the Jira site, if `ref` - must be unique across all entities in the scope of this project template creation
+    ProjectCreateResourceIdentifier pcri?;
+    # Whether the field is required
+    boolean required?;
+|};
+
 # The scope of the status
 public type StatusScope record {|
     # Project ID details
@@ -1720,12 +1721,6 @@ public type GetAvatarImageByTypeQueries record {
     "png"|"svg" format?;
 };
 
-# Represents the Queries record for the operation: getValidProjectKey
-public type GetValidProjectKeyQueries record {
-    # The project key
-    string 'key?;
-};
-
 # Details about the issues created and the errors for requests that failed
 public type CreatedIssues record {|
     # Details of the issues created
@@ -1733,6 +1728,12 @@ public type CreatedIssues record {|
     # Error details for failed issue creation requests
     BulkOperationErrorResult[] errors?;
 |};
+
+# Represents the Queries record for the operation: getValidProjectKey
+public type GetValidProjectKeyQueries record {
+    # The project key
+    string 'key?;
+};
 
 # Represents the Queries record for the operation: getCurrentUser
 public type GetCurrentUserQueries record {
@@ -1791,6 +1792,12 @@ public type GetCustomFieldsConfigurationsQueries record {
     int startAt = 0;
 };
 
+# Details about a license for the Jira instance
+public type License record {|
+    # The applications under this license
+    LicensedApplication[] applications;
+|};
+
 public type CreateSchedulingRequest record {|
     # The estimation unit for the plan. This must be "StoryPoints", "Days" or "Hours"
     "StoryPoints"|"Days"|"Hours" estimation;
@@ -1802,12 +1809,6 @@ public type CreateSchedulingRequest record {|
     CreateDateFieldRequest startDate?;
     # The dependencies for the plan. This must be "Sequential" or "Concurrent"
     "Sequential"|"Concurrent" dependencies?;
-|};
-
-# Details about a license for the Jira instance
-public type License record {|
-    # The applications under this license
-    LicensedApplication[] applications;
 |};
 
 # Represents the Queries record for the operation: assignPermissionScheme
@@ -1870,6 +1871,16 @@ public type JsonNode record {|
     boolean 'object?;
 |};
 
+# The details of the available dashboard gadget
+public type AvailableDashboardGadget record {|
+    # The title of the gadget
+    string title;
+    # The URI of the gadget type
+    string uri?;
+    # The module key of the gadget type
+    string moduleKey?;
+|};
+
 # Details about a created issue or subtask
 public type CreatedIssue record {|
     # The URL of the created issue or subtask
@@ -1882,16 +1893,6 @@ public type CreatedIssue record {|
     string 'key?;
     # The response code and messages related to any requested transition
     NestedResponse transition?;
-|};
-
-# The details of the available dashboard gadget
-public type AvailableDashboardGadget record {|
-    # The title of the gadget
-    string title;
-    # The URI of the gadget type
-    string uri?;
-    # The module key of the gadget type
-    string moduleKey?;
 |};
 
 @constraint:String {maxLength: 20}
@@ -1989,6 +1990,19 @@ public type GetOptionsForContextQueries record {
     int startAt = 0;
 };
 
+# Issue Bulk Transition Payload
+public type IssueBulkTransitionPayload record {|
+    # A boolean value that indicates whether to send a bulk change notification when the issues are being transitioned.
+    # 
+    # If `true`, dispatches a bulk notification email to users about the updates
+    boolean? sendBulkNotification = true;
+    # List of objects and each object has two properties:
+    # 
+    #  *  Issues that will be bulk transitioned.
+    #  *  TransitionId that corresponds to a specific transition of issues that share the same workflow
+    BulkTransitionSubmitInput[] bulkTransitionInputs;
+|};
+
 # A page of items
 public type PageBeanFilterDetails record {|
     # The number of items returned
@@ -2005,19 +2019,6 @@ public type PageBeanFilterDetails record {|
     string self?;
     # The index of the first item returned
     int startAt?;
-|};
-
-# Issue Bulk Transition Payload
-public type IssueBulkTransitionPayload record {|
-    # A boolean value that indicates whether to send a bulk change notification when the issues are being transitioned.
-    # 
-    # If `true`, dispatches a bulk notification email to users about the updates
-    boolean? sendBulkNotification = true;
-    # List of objects and each object has two properties:
-    # 
-    #  *  Issues that will be bulk transitioned.
-    #  *  TransitionId that corresponds to a specific transition of issues that share the same workflow
-    BulkTransitionSubmitInput[] bulkTransitionInputs;
 |};
 
 # Represents the Queries record for the operation: getAllFieldConfigurationSchemes
@@ -2124,21 +2125,21 @@ public type FieldLayoutSchemePayload record {|
     record {|ProjectCreateResourceIdentifier...;|} explicitMappings?;
 |};
 
-# Represents the Queries record for the operation: getUserDefaultColumns
-public type GetUserDefaultColumnsQueries record {
-    # The account ID of the user, which uniquely identifies the user across all Atlassian products. For example, *5b10ac8d82e05b22cc7d4ef5*
-    @constraint:String {maxLength: 128}
-    string accountId?;
-    # This parameter is no longer available See the [deprecation notice](https://developer.atlassian.com/cloud/jira/platform/deprecation-notice-user-privacy-api-migration-guide/) for details
-    string username?;
-};
-
 # Represents the Queries record for the operation: removeWatcher
 public type RemoveWatcherQueries record {
     # The account ID of the user, which uniquely identifies the user across all Atlassian products. For example, *5b10ac8d82e05b22cc7d4ef5*. Required
     @constraint:String {maxLength: 128}
     string accountId?;
     # This parameter is no longer available. See the [deprecation notice](https://developer.atlassian.com/cloud/jira/platform/deprecation-notice-user-privacy-api-migration-guide/) for details
+    string username?;
+};
+
+# Represents the Queries record for the operation: getUserDefaultColumns
+public type GetUserDefaultColumnsQueries record {
+    # The account ID of the user, which uniquely identifies the user across all Atlassian products. For example, *5b10ac8d82e05b22cc7d4ef5*
+    @constraint:String {maxLength: 128}
+    string accountId?;
+    # This parameter is no longer available See the [deprecation notice](https://developer.atlassian.com/cloud/jira/platform/deprecation-notice-user-privacy-api-migration-guide/) for details
     string username?;
 };
 
@@ -2301,6 +2302,9 @@ public type ProjectIdentifierBean record {|
     string 'key?;
 |};
 
+# Details of an operand in a JQL clause
+public type JqlQueryClauseOperand ListOperand|ValueOperand|FunctionOperand|KeywordOperand;
+
 # Details about a failed webhook
 public type FailedWebhook record {|
     # The time the webhook was added to the list of failed webhooks (that is, the time of the last failed retry)
@@ -2312,9 +2316,6 @@ public type FailedWebhook record {|
     # The original webhook destination
     string url;
 |};
-
-# Details of an operand in a JQL clause
-public type JqlQueryClauseOperand ListOperand|ValueOperand|FunctionOperand|KeywordOperand;
 
 # The details of an issue type screen scheme
 public type IssueTypeScreenSchemeDetails record {|
@@ -2342,17 +2343,15 @@ public type WorkflowSchemeProjectAssociation record {|
     string projectId;
 |};
 
-# The statuses associated with this workflow
-public type StatusLayoutUpdate record {
-    # The approval configuration of a status within a workflow. Applies only to Jira Service Management approvals
-    ApprovalConfiguration? approvalConfiguration?;
-    # The starting point for the statuses in the workflow
-    WorkflowLayout? layout?;
-    # The properties for this status layout.
-    record {|string...;|} properties;
-    # A unique ID which the status will use to refer to this layout configuration.
-    string statusReference;
-};
+# Details about the time tracking provider
+public type TimeTrackingProvider record {|
+    # The name of the time tracking provider. For example, *JIRA provided time tracking*
+    string name?;
+    # The key for the time tracking provider. For example, *JIRA*
+    string 'key;
+    # The URL of the configuration page for the time tracking provider app. For example, */example/config/url*. This property is only returned if the `adminPageKey` property is set in the module descriptor of the time tracking provider app
+    string url?;
+|};
 
 # Represents the Queries record for the operation: search
 public type SearchQueries record {
@@ -2376,15 +2375,17 @@ public type SearchQueries record {
     int startAt = 0;
 };
 
-# Details about the time tracking provider
-public type TimeTrackingProvider record {|
-    # The name of the time tracking provider. For example, *JIRA provided time tracking*
-    string name?;
-    # The key for the time tracking provider. For example, *JIRA*
-    string 'key;
-    # The URL of the configuration page for the time tracking provider app. For example, */example/config/url*. This property is only returned if the `adminPageKey` property is set in the module descriptor of the time tracking provider app
-    string url?;
-|};
+# The statuses associated with this workflow
+public type StatusLayoutUpdate record {
+    # The approval configuration of a status within a workflow. Applies only to Jira Service Management approvals
+    ApprovalConfiguration? approvalConfiguration?;
+    # The starting point for the statuses in the workflow
+    WorkflowLayout? layout?;
+    # The properties for this status layout.
+    record {|string...;|} properties;
+    # A unique ID which the status will use to refer to this layout configuration.
+    string statusReference;
+};
 
 public type JiraGroupInput record {|
     string groupName;
@@ -2469,14 +2470,6 @@ public type UpdateWorkflowTransitionPropertyQueries record {
     string 'key;
 };
 
-# Workflows using the status
-public type StatusWorkflowUsageDTO record {|
-    # The status ID
-    string statusId?;
-    # A page of workflows
-    StatusWorkflowUsagePage workflows?;
-|};
-
 # Jira instance health check results. Deprecated and no longer returned
 public type HealthCheckResult record {|
     # The name of the Jira health check item
@@ -2487,14 +2480,12 @@ public type HealthCheckResult record {|
     boolean passed?;
 |};
 
-# Change the order of issue priorities
-public type ReorderIssuePriorities record {|
-    # The list of issue IDs to be reordered. Cannot contain duplicates nor after ID
-    string[] ids;
-    # The ID of the priority. Required if `position` isn't provided
-    string after?;
-    # The position for issue priorities to be moved to. Required if `after` isn't provided
-    string position?;
+# Workflows using the status
+public type StatusWorkflowUsageDTO record {|
+    # The status ID
+    string statusId?;
+    # A page of workflows
+    StatusWorkflowUsagePage workflows?;
 |};
 
 # Details of issue security scheme level new members
@@ -2503,14 +2494,14 @@ public type SecuritySchemeMembersRequest record {|
     SecuritySchemeLevelMemberBean[] members?;
 |};
 
-# Details of a workflow status
-public type WorkflowStatus record {|
-    # The name of the status in the workflow
-    string name;
-    # The ID of the issue status
-    string id;
-    # Additional properties that modify the behavior of issues in this status. Supports the properties `jira.issue.editable` and `issueEditable` (deprecated) that indicate whether issues are editable
-    record {} properties?;
+# Change the order of issue priorities
+public type ReorderIssuePriorities record {|
+    # The list of issue IDs to be reordered. Cannot contain duplicates nor after ID
+    string[] ids;
+    # The ID of the priority. Required if `position` isn't provided
+    string after?;
+    # The position for issue priorities to be moved to. Required if `after` isn't provided
+    string position?;
 |};
 
 # The IDs of the screens for the screen types of the screen scheme
@@ -2525,6 +2516,16 @@ public type UpdateScreenTypes record {|
     string create?;
 |};
 
+# Details of a workflow status
+public type WorkflowStatus record {|
+    # The name of the status in the workflow
+    string name;
+    # The ID of the issue status
+    string id;
+    # Additional properties that modify the behavior of issues in this status. Supports the properties `jira.issue.editable` and `issueEditable` (deprecated) that indicate whether issues are editable
+    record {} properties?;
+|};
+
 # Details of global and project permissions granted to the user
 public type BulkPermissionGrants record {|
     # List of permissions granted to the user
@@ -2532,12 +2533,6 @@ public type BulkPermissionGrants record {|
     # List of project permissions and the projects and issues those permissions provide access to
     BulkProjectPermissionGrants[] projectPermissions;
 |};
-
-# Represents the Queries record for the operation: getWorklogsForIds
-public type GetWorklogsForIdsQueries record {
-    # Use [expand](#expansion) to include additional information about worklogs in the response. This parameter accepts `properties` that returns the properties of each worklog
-    string expand = "";
-};
 
 # A page of items
 public type PageBean2ComponentJsonBean record {|
@@ -2574,6 +2569,12 @@ public type PageBeanFieldConfigurationDetails record {|
     # The index of the first item returned
     int startAt?;
 |};
+
+# Represents the Queries record for the operation: getWorklogsForIds
+public type GetWorklogsForIdsQueries record {
+    # Use [expand](#expansion) to include additional information about worklogs in the response. This parameter accepts `properties` that returns the properties of each worklog
+    string expand = "";
+};
 
 # Represents the Queries record for the operation: getDefaultValues
 public type GetDefaultValuesQueries record {
@@ -2697,14 +2698,6 @@ public type ContainerForRegisteredWebhooks record {|
     RegisteredWebhook[] webhookRegistrationResult?;
 |};
 
-# The converted JQL queries
-public type ConvertedJQLQueries record {|
-    # List of queries containing user information that could not be mapped to an existing user
-    JQLQueryWithUnknownUsers[] queriesWithUnknownUsers?;
-    # The list of converted query strings with account IDs in place of user identifiers
-    string[] queryStrings?;
-|};
-
 public type UpdateUserToGroupBean record {
     # The account ID of the user, which uniquely identifies the user across all Atlassian products. For example, *5b10ac8d82e05b22cc7d4ef5*.
     @constraint:String {maxLength: 128}
@@ -2712,6 +2705,14 @@ public type UpdateUserToGroupBean record {
     # This property is no longer available. See the [deprecation notice](https://developer.atlassian.com/cloud/jira/platform/deprecation-notice-user-privacy-api-migration-guide/) for details.
     string name?;
 };
+
+# The converted JQL queries
+public type ConvertedJQLQueries record {|
+    # List of queries containing user information that could not be mapped to an existing user
+    JQLQueryWithUnknownUsers[] queriesWithUnknownUsers?;
+    # The list of converted query strings with account IDs in place of user identifiers
+    string[] queryStrings?;
+|};
 
 # Represents the Queries record for the operation: evaluateJiraExpression
 public type EvaluateJiraExpressionQueries record {
@@ -2795,12 +2796,6 @@ public type AttachmentSettings record {|
     boolean enabled?;
 |};
 
-# Details of notifications which should be added to the notification scheme
-public type AddNotificationsDetails record {
-    # The list of notifications which should be added to the notification scheme.
-    NotificationSchemeEventDetails[] notificationSchemeEvents;
-};
-
 # Represents the Queries record for the operation: searchProjectsUsingSecuritySchemes
 public type SearchProjectsUsingSecuritySchemesQueries record {
     # The list of security scheme IDs to be filtered out
@@ -2811,6 +2806,12 @@ public type SearchProjectsUsingSecuritySchemesQueries record {
     string[] projectId?;
     # The index of the first item to return in a page of results (page offset)
     string startAt = "0";
+};
+
+# Details of notifications which should be added to the notification scheme
+public type AddNotificationsDetails record {
+    # The list of notifications which should be added to the notification scheme.
+    NotificationSchemeEventDetails[] notificationSchemeEvents;
 };
 
 # Represents the Queries record for the operation: deleteRemoteIssueLinkByGlobalId
@@ -2893,15 +2894,15 @@ public type FoundUsersAndGroups record {|
     FoundUsers users?;
 |};
 
-public type WorkflowSchemeUpdateRequiredMappingsResponse record {|
-    # The details of the statuses in the associated workflows
-    StatusMetadata[] statuses?;
-    # The list of required status mappings by workflow
-    RequiredMappingByWorkflows[] statusMappingsByWorkflows?;
-    # The list of required status mappings by issue type
-    RequiredMappingByIssueType[] statusMappingsByIssueTypes?;
-    # The statuses associated with each workflow
-    StatusesPerWorkflow[] statusesPerWorkflow?;
+public type IssueBulkTransitionForWorkflow record {|
+    # Indicates whether all the transitions of this workflow are available in the transitions list or not
+    boolean isTransitionsFiltered?;
+    # List of transitions available for issues from the request which are associated with this workflow.
+    # 
+    #  **This list includes only those transitions that are common across the issues in this workflow and do not involve any additional field updates.** 
+    SimplifiedIssueTransition[] transitions?;
+    # List of issue keys from the request which are associated with this workflow
+    string[] issues?;
 |};
 
 # Project Details
@@ -2932,15 +2933,15 @@ public type CustomTemplatesProjectDetails record {|
     string url?;
 |};
 
-public type IssueBulkTransitionForWorkflow record {|
-    # Indicates whether all the transitions of this workflow are available in the transitions list or not
-    boolean isTransitionsFiltered?;
-    # List of transitions available for issues from the request which are associated with this workflow.
-    # 
-    #  **This list includes only those transitions that are common across the issues in this workflow and do not involve any additional field updates.** 
-    SimplifiedIssueTransition[] transitions?;
-    # List of issue keys from the request which are associated with this workflow
-    string[] issues?;
+public type WorkflowSchemeUpdateRequiredMappingsResponse record {|
+    # The details of the statuses in the associated workflows
+    StatusMetadata[] statuses?;
+    # The list of required status mappings by workflow
+    RequiredMappingByWorkflows[] statusMappingsByWorkflows?;
+    # The list of required status mappings by issue type
+    RequiredMappingByIssueType[] statusMappingsByIssueTypes?;
+    # The statuses associated with each workflow
+    StatusesPerWorkflow[] statusesPerWorkflow?;
 |};
 
 # Details of the users and groups to receive the notification
@@ -3076,14 +3077,6 @@ public type RemoveUserFromGroupQueries record {
     string username?;
 };
 
-# Card layout settings of the board
-public type CardLayoutField record {|
-    "PLAN"|"WORK" mode?;
-    int id?;
-    int:Signed32 position?;
-    string fieldId?;
-|};
-
 # Represents the Queries record for the operation: bulkGetGroups
 public type BulkGetGroupsQueries record {
     # The access level of a group. Valid values: 'site-admin', 'admin', 'user'
@@ -3099,6 +3092,14 @@ public type BulkGetGroupsQueries record {
     # The index of the first item to return in a page of results (page offset)
     int startAt = 0;
 };
+
+# Card layout settings of the board
+public type CardLayoutField record {|
+    "PLAN"|"WORK" mode?;
+    int id?;
+    int:Signed32 position?;
+    string fieldId?;
+|};
 
 # Represents the Queries record for the operation: validateProjectKey
 public type ValidateProjectKeyQueries record {
@@ -3168,16 +3169,6 @@ public type FunctionOperand record {
     string[] arguments;
 };
 
-# The configuration of the rule
-public type WorkflowRuleConfiguration record {|
-    # The ID of the rule
-    string? id?;
-    # The parameters related to the rule
-    record {|string...;|} parameters?;
-    # The rule key of the rule
-    string ruleKey;
-|};
-
 # Represents the Queries record for the operation: getFieldAutoCompleteForQueryString
 public type GetFieldAutoCompleteForQueryStringQueries record {
     # The partial predicate item name entered by the user
@@ -3189,6 +3180,16 @@ public type GetFieldAutoCompleteForQueryStringQueries record {
     # The partial field item name entered by the user
     string fieldValue?;
 };
+
+# The configuration of the rule
+public type WorkflowRuleConfiguration record {|
+    # The ID of the rule
+    string? id?;
+    # The parameters related to the rule
+    record {|string...;|} parameters?;
+    # The rule key of the rule
+    string ruleKey;
+|};
 
 # A page of items
 public type PageBeanProject record {|
@@ -3480,6 +3481,16 @@ public type WorkflowProjectIssueTypeUsageDTO record {|
     WorkflowProjectIssueTypeUsagePage issueTypes?;
 |};
 
+# Represents the Queries record for the operation: getSelectableIssueFieldOptions
+public type GetSelectableIssueFieldOptionsQueries record {
+    # The maximum number of items to return per page
+    int:Signed32 maxResults = 50;
+    # Filters the results to options that are only available in the specified project
+    int projectId?;
+    # The index of the first item to return in a page of results (page offset)
+    int startAt = 0;
+};
+
 # A type of issue suggested for use in auto-completion
 public type IssuePickerSuggestionsIssueType record {|
     # If no issue suggestions are found, returns a message indicating no suggestions were found,
@@ -3493,16 +3504,6 @@ public type IssuePickerSuggestionsIssueType record {|
     # A list of issues suggested for use in auto-completion
     SuggestedIssue[] issues?;
 |};
-
-# Represents the Queries record for the operation: getSelectableIssueFieldOptions
-public type GetSelectableIssueFieldOptionsQueries record {
-    # The maximum number of items to return per page
-    int:Signed32 maxResults = 50;
-    # Filters the results to options that are only available in the specified project
-    int projectId?;
-    # The index of the first item to return in a page of results (page offset)
-    int startAt = 0;
-};
 
 # Represents the Queries record for the operation: addWorklog
 public type AddWorklogQueries record {
@@ -3736,6 +3737,11 @@ public type FoundGroups record {|
     string header?;
 |};
 
+public type JiraColorField record {|
+    JiraColorInput color;
+    string fieldId;
+|};
+
 # A page of items
 public type PageBeanIssueTypeScreenSchemesProjects record {|
     # The number of items returned
@@ -3752,11 +3758,6 @@ public type PageBeanIssueTypeScreenSchemesProjects record {|
     string self?;
     # The index of the first item returned
     int startAt?;
-|};
-
-public type JiraColorField record {|
-    JiraColorInput color;
-    string fieldId;
 |};
 
 # Details about a project
@@ -3962,14 +3963,6 @@ public type RemoveGroupQueries record {
     string swapGroup?;
 };
 
-# Represents the Queries record for the operation: getDynamicWebhooksForApp
-public type GetDynamicWebhooksForAppQueries record {
-    # The maximum number of items to return per page
-    int:Signed32 maxResults = 100;
-    # The index of the first item to return in a page of results (page offset)
-    int startAt = 0;
-};
-
 # Details of an issue type scheme and its associated issue types
 public type IssueTypeSchemeDetails record {|
     # The ID of the default issue type of the issue type scheme. This ID must be included in `issueTypeIds`
@@ -3981,6 +3974,14 @@ public type IssueTypeSchemeDetails record {|
     # The description of the issue type scheme. The maximum length is 4000 characters
     string description?;
 |};
+
+# Represents the Queries record for the operation: getDynamicWebhooksForApp
+public type GetDynamicWebhooksForAppQueries record {
+    # The maximum number of items to return per page
+    int:Signed32 maxResults = 100;
+    # The index of the first item to return in a page of results (page offset)
+    int startAt = 0;
+};
 
 # Represents the Queries record for the operation: getWorkflowTransitionProperties
 public type GetWorkflowTransitionPropertiesQueries record {
@@ -4032,6 +4033,18 @@ public type ChangeDetails record {|
     string fieldId?;
 |};
 
+# Defines the payload for the field layouts. See https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issue-field-configurations/\#api-group-issue-field-configurations" + fieldlayout is what users would see as "Field Configuration" in Jira's UI - https://support.atlassian.com/jira-cloud-administration/docs/manage-issue-field-configurations/
+public type FieldLayoutPayload record {|
+    # The field layout configuration. See https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issue-field-configurations/\#api-rest-api-3-fieldconfiguration-post
+    FieldLayoutConfiguration[] configuration?;
+    # The name of the field layout
+    string name?;
+    # The description of the field layout
+    string description?;
+    # Every project-created entity has an ID that must be unique within the scope of the project creation. PCRI (Project Create Resource Identifier) is a standard format for creating IDs and references to other project entities. PCRI format is defined as follows: pcri:\[entityType\]:\[type\]:\[entityId\] entityType - the type of an entity, e.g. status, role, workflow type - PCRI type, either `id` - The ID of an entity that already exists in the target site, or `ref` - A unique reference to an entity that is being created entityId - entity identifier, if type is `id` - must be an existing entity ID that exists in the Jira site, if `ref` - must be unique across all entities in the scope of this project template creation
+    ProjectCreateResourceIdentifier pcri?;
+|};
+
 # Represents the Queries record for the operation: getScreenSchemes
 public type GetScreenSchemesQueries record {
     # Use [expand](#expansion) include additional information in the response. This parameter accepts `issueTypeScreenSchemes` that, for each screen schemes, returns information about the issue type screen scheme the screen scheme is assigned to
@@ -4051,16 +4064,12 @@ public type GetScreenSchemesQueries record {
     int startAt = 0;
 };
 
-# Defines the payload for the field layouts. See https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issue-field-configurations/\#api-group-issue-field-configurations" + fieldlayout is what users would see as "Field Configuration" in Jira's UI - https://support.atlassian.com/jira-cloud-administration/docs/manage-issue-field-configurations/
-public type FieldLayoutPayload record {|
-    # The field layout configuration. See https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issue-field-configurations/\#api-rest-api-3-fieldconfiguration-post
-    FieldLayoutConfiguration[] configuration?;
-    # The name of the field layout
-    string name?;
-    # The description of the field layout
-    string description?;
-    # Every project-created entity has an ID that must be unique within the scope of the project creation. PCRI (Project Create Resource Identifier) is a standard format for creating IDs and references to other project entities. PCRI format is defined as follows: pcri:\[entityType\]:\[type\]:\[entityId\] entityType - the type of an entity, e.g. status, role, workflow type - PCRI type, either `id` - The ID of an entity that already exists in the target site, or `ref` - A unique reference to an entity that is being created entityId - entity identifier, if type is `id` - must be an existing entity ID that exists in the Jira site, if `ref` - must be unique across all entities in the scope of this project template creation
-    ProjectCreateResourceIdentifier pcri?;
+# An element of the order-by JQL clause
+public type JqlQueryOrderByClauseElement record {|
+    # A field used in a JQL query. See [Advanced searching - fields reference](https://confluence.atlassian.com/x/dAiiLQ) for more information about fields in JQL queries
+    JqlQueryField 'field;
+    # The direction in which to order the results
+    "asc"|"desc" direction?;
 |};
 
 # The conditions group associated with the transition
@@ -4071,14 +4080,6 @@ public type ConditionGroupUpdate record {|
     WorkflowRuleConfiguration[] conditions?;
     # Determines how the conditions in the group are evaluated. Accepts either `ANY` or `ALL`. If `ANY` is used, at least one condition in the group must be true for the group to evaluate to true. If `ALL` is used, all conditions in the group must be true for the group to evaluate to true
     "ANY"|"ALL" operation;
-|};
-
-# An element of the order-by JQL clause
-public type JqlQueryOrderByClauseElement record {|
-    # A field used in a JQL query. See [Advanced searching - fields reference](https://confluence.atlassian.com/x/dAiiLQ) for more information about fields in JQL queries
-    JqlQueryField 'field;
-    # The direction in which to order the results
-    "asc"|"desc" direction?;
 |};
 
 # The payload for creating a workflow scheme. See https://www.atlassian.com/software/jira/guides/workflows/overview\#what-is-a-jira-workflow-scheme
@@ -4207,6 +4208,15 @@ public type JiraMultipleSelectUserPickerField record {|
     string fieldId;
 |};
 
+# The default value for a URL custom field
+public type CustomFieldContextDefaultValueURL record {
+    # The ID of the context
+    string contextId;
+    string 'type;
+    # The default URL
+    string url;
+};
+
 # Jql function precomputation
 public type JqlFunctionPrecomputationBean record {|
     # The field the function was executed against
@@ -4232,15 +4242,6 @@ public type JqlFunctionPrecomputationBean record {|
     # The operator in context of which function was executed
     string operator?;
 |};
-
-# The default value for a URL custom field
-public type CustomFieldContextDefaultValueURL record {
-    # The ID of the context
-    string contextId;
-    string 'type;
-    # The default URL
-    string url;
-};
 
 # A JQL query clause
 public type JqlQueryClause CompoundClause|FieldValueClause|FieldWasClause|FieldChangedClause;
@@ -4303,27 +4304,6 @@ public type ProjectPayload record {|
     ProjectCreateResourceIdentifier pcri?;
 |};
 
-public type CreateCrossProjectReleaseRequest record {|
-    # The IDs of the releases to include in the cross-project release
-    int[] releaseIds?;
-    # The cross-project release name
-    string name;
-|};
-
-# The details of a UI modification's context, which define where to activate the UI modification
-public type UiModificationContextDetails record {|
-    # Whether a context is available. For example, when a project is deleted the context becomes unavailable
-    boolean isAvailable?;
-    # The issue type ID of the context. Null is treated as a wildcard, meaning the UI modification will be applied to all issue types. Each UI modification context can have a maximum of one wildcard
-    string issueTypeId?;
-    # The view type of the context. Only `GIC`(Global Issue Create), `IssueView` and `IssueTransition` are supported. Null is treated as a wildcard, meaning the UI modification will be applied to all view types. Each UI modification context can have a maximum of one wildcard
-    "GIC"|"IssueView"|"IssueTransition" viewType?;
-    # The ID of the UI modification context
-    string id?;
-    # The project ID of the context. Null is treated as a wildcard, meaning the UI modification will be applied to all projects. Each UI modification context can have a maximum of one wildcard
-    string projectId?;
-|};
-
 # The JQL specifying the issues available in the evaluated Jira expression under the `issues` context variable. Not all issues returned by the JQL query are loaded, only those described by the `startAt` and `maxResults` properties. To determine whether it is necessary to iterate to ensure all the issues returned by the JQL query are evaluated, inspect `meta.issues.jql.count` in the response
 public type JexpJqlIssues record {|
     # The maximum number of issues to return from the JQL query. Inspect `meta.issues.jql.maxResults` in the response to ensure the maximum value has not been exceeded
@@ -4334,6 +4314,13 @@ public type JexpJqlIssues record {|
     int startAt?;
     # Determines how to validate the JQL query and treat the validation results
     "strict"|"warn"|"none" validation = "strict";
+|};
+
+public type CreateCrossProjectReleaseRequest record {|
+    # The IDs of the releases to include in the cross-project release
+    int[] releaseIds?;
+    # The cross-project release name
+    string name;
 |};
 
 # Represents the Queries record for the operation: getScreens
@@ -4354,6 +4341,20 @@ public type GetScreensQueries record {
     # The index of the first item to return in a page of results (page offset)
     int startAt = 0;
 };
+
+# The details of a UI modification's context, which define where to activate the UI modification
+public type UiModificationContextDetails record {|
+    # Whether a context is available. For example, when a project is deleted the context becomes unavailable
+    boolean isAvailable?;
+    # The issue type ID of the context. Null is treated as a wildcard, meaning the UI modification will be applied to all issue types. Each UI modification context can have a maximum of one wildcard
+    string issueTypeId?;
+    # The view type of the context. Only `GIC`(Global Issue Create), `IssueView` and `IssueTransition` are supported. Null is treated as a wildcard, meaning the UI modification will be applied to all view types. Each UI modification context can have a maximum of one wildcard
+    "GIC"|"IssueView"|"IssueTransition" viewType?;
+    # The ID of the UI modification context
+    string id?;
+    # The project ID of the context. Null is treated as a wildcard, meaning the UI modification will be applied to all projects. Each UI modification context can have a maximum of one wildcard
+    string projectId?;
+|};
 
 # A webhook
 public type Webhook record {|
@@ -4499,16 +4500,6 @@ public type GetTeamsQueries record {
     int:Signed32 maxResults = 50;
 };
 
-# Deprecated. See the [deprecation notice](https://developer.atlassian.com/cloud/jira/platform/changelog/#CHANGE-2298) for details.
-# 
-# The workflows that use this status. Only available if the `workflowUsages` expand is requested
-public type WorkflowUsages record {|
-    # Workflow name
-    string workflowName?;
-    # Workflow ID
-    string workflowId?;
-|};
-
 # An ordered list of custom field option IDs and information on where to move them
 public type OrderOfCustomFieldOptions record {|
     # The ID of the custom field option or cascading option to place the moved options after. Required if `position` isn't provided
@@ -4517,6 +4508,16 @@ public type OrderOfCustomFieldOptions record {|
     "First"|"Last" position?;
     # A list of IDs of custom field options to move. The order of the custom field option IDs in the list is the order they are given after the move. The list must contain custom field options or cascading options, but not both
     string[] customFieldOptionIds;
+|};
+
+# Deprecated. See the [deprecation notice](https://developer.atlassian.com/cloud/jira/platform/changelog/#CHANGE-2298) for details.
+# 
+# The workflows that use this status. Only available if the `workflowUsages` expand is requested
+public type WorkflowUsages record {|
+    # Workflow name
+    string workflowName?;
+    # Workflow ID
+    string workflowId?;
 |};
 
 # Details of a dashboard
@@ -4550,16 +4551,16 @@ public type Dashboard record {|
     boolean isFavourite?;
 |};
 
-# List of security schemes
-public type SecuritySchemes record {|
-    # List of security schemes
-    SecurityScheme[] issueSecuritySchemes?;
-|};
-
 # The list of issue type IDs to be removed from the field configuration scheme
 public type IssueTypeIdsToRemove record {|
     # The list of issue type IDs. Must contain unique values not longer than 255 characters and not be empty. Maximum of 100 IDs
     string[] issueTypeIds;
+|};
+
+# List of security schemes
+public type SecuritySchemes record {|
+    # List of security schemes
+    SecurityScheme[] issueSecuritySchemes?;
 |};
 
 # A metric that provides insight into the active licence details
@@ -4568,14 +4569,6 @@ public type LicenseMetric record {|
     string value?;
     # The key of a specific license metric
     string 'key?;
-|};
-
-# Details of the statuses being created and their scope
-public type StatusCreateRequest record {|
-    # The scope of the status
-    StatusScope scope;
-    # Details of the statuses being created
-    StatusCreate[] statuses;
 |};
 
 # Details of a notification scheme
@@ -4587,6 +4580,14 @@ public type UpdateNotificationSchemeDetails record {
     @constraint:String {maxLength: 255}
     string name?;
 };
+
+# Details of the statuses being created and their scope
+public type StatusCreateRequest record {|
+    # The scope of the status
+    StatusScope scope;
+    # Details of the statuses being created
+    StatusCreate[] statuses;
+|};
 
 # The default value for a Forge group custom field
 public type CustomFieldContextDefaultValueForgeGroupField record {
@@ -4619,19 +4620,19 @@ public type Permissions record {|
     record {|UserPermission...;|} permissions?;
 |};
 
+public type SimpleApplicationPropertyBean record {|
+    # The ID of the application property
+    string id?;
+    # The new value
+    string value?;
+|};
+
 # Associated field configuration scheme and project
 public type FieldConfigurationSchemeProjectAssociation record {|
     # The ID of the field configuration scheme. If the field configuration scheme ID is `null`, the operation assigns the default field configuration scheme
     string fieldConfigurationSchemeId?;
     # The ID of the project
     string projectId;
-|};
-
-public type SimpleApplicationPropertyBean record {|
-    # The ID of the application property
-    string id?;
-    # The new value
-    string value?;
 |};
 
 public type OldToNewSecurityLevelMappingsBean record {|
@@ -4781,12 +4782,6 @@ public type AvailableWorkflowConnectRule record {|
     string moduleKey?;
 |};
 
-# The sanitized JQL queries for the given account IDs
-public type SanitizedJqlQueries record {|
-    # The list of sanitized JQL queries
-    SanitizedJqlQuery[] queries?;
-|};
-
 # The project and issue type mapping with a matching custom field context
 public type ContextForProjectAndIssueType record {|
     # The ID of the issue type
@@ -4795,6 +4790,12 @@ public type ContextForProjectAndIssueType record {|
     string contextId;
     # The ID of the project
     string projectId;
+|};
+
+# The sanitized JQL queries for the given account IDs
+public type SanitizedJqlQueries record {|
+    # The list of sanitized JQL queries
+    SanitizedJqlQuery[] queries?;
 |};
 
 # Projects using the workflow scheme
@@ -4893,6 +4894,28 @@ public type RemoteIssueLinkRequest record {
     string relationship?;
 };
 
+# Number of archived/unarchived issues and list of errors that occurred during the action, if any
+public type IssueArchivalSyncResponse record {|
+    Errors errors?;
+    int numberOfIssuesUpdated?;
+|};
+
+# An issue ID with entity property values. See [Entity properties](https://developer.atlassian.com/cloud/jira/platform/jira-entity-properties/) for more information
+public type IssueEntityPropertiesForMultiUpdate record {|
+    # The ID of the issue
+    int issueID?;
+    # Entity properties to set on the issue. The maximum length of an issue property value is 32768 characters
+    record {|JsonNode...;|} properties?;
+|};
+
+# The payload for creating a security level member. See https://support.atlassian.com/jira-cloud-administration/docs/configure-issue-security-schemes/
+public type SecurityLevelMemberPayload record {|
+    # Defines the value associated with the type. For reporter this would be \{"null"\}; for users this would be the names of specific users); for group this would be group names like \{"administrators", "jira-administrators", "jira-users"\}
+    string 'parameter?;
+    # The type of the security level member
+    "group"|"reporter"|"users" 'type?;
+|};
+
 # The transition update data
 public type TransitionUpdateDTO record {
     # The post-functions of the transition.
@@ -4922,28 +4945,6 @@ public type TransitionUpdateDTO record {
     # The validators of the transition.
     WorkflowRuleConfiguration[] validators?;
 };
-
-# Number of archived/unarchived issues and list of errors that occurred during the action, if any
-public type IssueArchivalSyncResponse record {|
-    Errors errors?;
-    int numberOfIssuesUpdated?;
-|};
-
-# An issue ID with entity property values. See [Entity properties](https://developer.atlassian.com/cloud/jira/platform/jira-entity-properties/) for more information
-public type IssueEntityPropertiesForMultiUpdate record {|
-    # The ID of the issue
-    int issueID?;
-    # Entity properties to set on the issue. The maximum length of an issue property value is 32768 characters
-    record {|JsonNode...;|} properties?;
-|};
-
-# The payload for creating a security level member. See https://support.atlassian.com/jira-cloud-administration/docs/configure-issue-security-schemes/
-public type SecurityLevelMemberPayload record {|
-    # Defines the value associated with the type. For reporter this would be \{"null"\}; for users this would be the names of specific users); for group this would be group names like \{"administrators", "jira-administrators", "jira-users"\}
-    string 'parameter?;
-    # The type of the security level member
-    "group"|"reporter"|"users" 'type?;
-|};
 
 public type JiraExpressionsComplexityValueBean record {|
     # The maximum allowed complexity. The evaluation will fail if this value is exceeded
@@ -5032,12 +5033,6 @@ public type GetUserEmailQueries record {
     string accountId;
 };
 
-# Card layout configuration
-public type CardLayout record {|
-    # Whether to show days in column
-    true|false showDaysInColumn = false;
-|};
-
 public type JiraExpressionEvalContextBean record {|
     # The issue that is available under the `issue` variable when evaluating the expression
     IdOrKeyBean issue?;
@@ -5070,6 +5065,12 @@ public type GetCustomFieldContextsForProjectsAndIssueTypesQueries record {
     int startAt = 0;
 };
 
+# Card layout configuration
+public type CardLayout record {|
+    # Whether to show days in column
+    true|false showDaysInColumn = false;
+|};
+
 # The projects using this status
 public type StatusProjectUsageDTO record {|
     # A page of projects
@@ -5078,19 +5079,19 @@ public type StatusProjectUsageDTO record {|
     string statusId?;
 |};
 
+public type WorklogsMoveRequestBean record {|
+    # The issue id or key of the destination issue
+    string issueIdOrKey?;
+    # A list of worklog IDs
+    int[] ids?;
+|};
+
 # Details about the replacement for a deleted version
 public type CustomFieldReplacement record {|
     # The ID of the custom field in which to replace the version number
     int customFieldId?;
     # The version number to use as a replacement for the deleted version
     int moveTo?;
-|};
-
-public type WorklogsMoveRequestBean record {|
-    # The issue id or key of the destination issue
-    string issueIdOrKey?;
-    # A list of worklog IDs
-    int[] ids?;
 |};
 
 # The ID of an event that is being mapped to notifications
@@ -5249,6 +5250,14 @@ public type PageBeanSecurityLevel record {|
     int startAt?;
 |};
 
+# The projects the item is associated with. Indicated for items associated with [next-gen projects](https://confluence.atlassian.com/x/loMyO)
+public type Scope record {
+    # The project the item has scope in.
+    ProjectDetails project?;
+    # The type of scope.
+    "PROJECT"|"TEMPLATE" 'type?;
+};
+
 # Represents the Queries record for the operation: getIssueTypeScreenSchemes
 public type GetIssueTypeScreenSchemesQueries record {
     # Use [expand](#expansion) to include additional information in the response. This parameter accepts `projects` that, for each issue type screen schemes, returns information about the projects the issue type screen scheme is assigned to
@@ -5266,14 +5275,6 @@ public type GetIssueTypeScreenSchemesQueries record {
     string queryString = "";
     # The index of the first item to return in a page of results (page offset)
     int startAt = 0;
-};
-
-# The projects the item is associated with. Indicated for items associated with [next-gen projects](https://confluence.atlassian.com/x/loMyO)
-public type Scope record {
-    # The project the item has scope in.
-    ProjectDetails project?;
-    # The type of scope.
-    "PROJECT"|"TEMPLATE" 'type?;
 };
 
 # Details about a filter
@@ -5447,17 +5448,17 @@ public type DashboardDetails record {|
     SharePermission[] sharePermissions;
 |};
 
+# Details of field configuration items
+public type FieldConfigurationItemsDetails record {|
+    # Details of fields in a field configuration
+    FieldConfigurationItem[] fieldConfigurationItems;
+|};
+
 public type CreatePermissionRequest record {|
     # The permission holder
     CreatePermissionHolderRequest holder;
     # The permission type. This must be "View" or "Edit"
     "View"|"Edit" 'type;
-|};
-
-# Details of field configuration items
-public type FieldConfigurationItemsDetails record {|
-    # Details of fields in a field configuration
-    FieldConfigurationItem[] fieldConfigurationItems;
 |};
 
 # A paginated list of subscriptions to a filter
@@ -5611,6 +5612,13 @@ public type WorkflowAssociationStatusMapping record {|
     string newStatusId;
 |};
 
+# The default text for a text area custom field
+public type CustomFieldContextDefaultValueTextArea record {
+    # The default text. The maximum length is 32767 characters
+    string text?;
+    string 'type;
+};
+
 public type PageOfStatuses record {|
     # Number of items that satisfy the search
     int total?;
@@ -5627,13 +5635,6 @@ public type PageOfStatuses record {|
     # The index of the first item returned on the page
     int startAt?;
 |};
-
-# The default text for a text area custom field
-public type CustomFieldContextDefaultValueTextArea record {
-    # The default text. The maximum length is 32767 characters
-    string text?;
-    string 'type;
-};
 
 public type JiraIssueTypeField record {|
     string issueTypeId;
@@ -5878,6 +5879,11 @@ public type SharePermissionInputBean record {|
     string projectRoleId?;
 |};
 
+public type JiraLabelPropertiesInputJackson1 record {|
+    "GREY_LIGHTEST"|"GREY_LIGHTER"|"GREY"|"GREY_DARKER"|"GREY_DARKEST"|"PURPLE_LIGHTEST"|"PURPLE_LIGHTER"|"PURPLE"|"PURPLE_DARKER"|"PURPLE_DARKEST"|"BLUE_LIGHTEST"|"BLUE_LIGHTER"|"BLUE"|"BLUE_DARKER"|"BLUE_DARKEST"|"TEAL_LIGHTEST"|"TEAL_LIGHTER"|"TEAL"|"TEAL_DARKER"|"TEAL_DARKEST"|"GREEN_LIGHTEST"|"GREEN_LIGHTER"|"GREEN"|"GREEN_DARKER"|"GREEN_DARKEST"|"LIME_LIGHTEST"|"LIME_LIGHTER"|"LIME"|"LIME_DARKER"|"LIME_DARKEST"|"YELLOW_LIGHTEST"|"YELLOW_LIGHTER"|"YELLOW"|"YELLOW_DARKER"|"YELLOW_DARKEST"|"ORANGE_LIGHTEST"|"ORANGE_LIGHTER"|"ORANGE"|"ORANGE_DARKER"|"ORANGE_DARKEST"|"RED_LIGHTEST"|"RED_LIGHTER"|"RED"|"RED_DARKER"|"RED_DARKEST"|"MAGENTA_LIGHTEST"|"MAGENTA_LIGHTER"|"MAGENTA"|"MAGENTA_DARKER"|"MAGENTA_DARKEST" color?;
+    string name?;
+|};
+
 # Time tracking details
 public type TimeTrackingDetails record {|
     # The original estimate of time needed for this issue in seconds
@@ -5892,11 +5898,6 @@ public type TimeTrackingDetails record {|
     int remainingEstimateSeconds?;
     # The original estimate of time needed for this issue in readable format
     string originalEstimate?;
-|};
-
-public type JiraLabelPropertiesInputJackson1 record {|
-    "GREY_LIGHTEST"|"GREY_LIGHTER"|"GREY"|"GREY_DARKER"|"GREY_DARKEST"|"PURPLE_LIGHTEST"|"PURPLE_LIGHTER"|"PURPLE"|"PURPLE_DARKER"|"PURPLE_DARKEST"|"BLUE_LIGHTEST"|"BLUE_LIGHTER"|"BLUE"|"BLUE_DARKER"|"BLUE_DARKEST"|"TEAL_LIGHTEST"|"TEAL_LIGHTER"|"TEAL"|"TEAL_DARKER"|"TEAL_DARKEST"|"GREEN_LIGHTEST"|"GREEN_LIGHTER"|"GREEN"|"GREEN_DARKER"|"GREEN_DARKEST"|"LIME_LIGHTEST"|"LIME_LIGHTER"|"LIME"|"LIME_DARKER"|"LIME_DARKEST"|"YELLOW_LIGHTEST"|"YELLOW_LIGHTER"|"YELLOW"|"YELLOW_DARKER"|"YELLOW_DARKEST"|"ORANGE_LIGHTEST"|"ORANGE_LIGHTER"|"ORANGE"|"ORANGE_DARKER"|"ORANGE_DARKEST"|"RED_LIGHTEST"|"RED_LIGHTER"|"RED"|"RED_DARKER"|"RED_DARKEST"|"MAGENTA_LIGHTEST"|"MAGENTA_LIGHTER"|"MAGENTA"|"MAGENTA_DARKER"|"MAGENTA_DARKEST" color?;
-    string name?;
 |};
 
 # A [user](https://developer.atlassian.com/cloud/jira/platform/jira-expressions-type-reference#user) specified as an Atlassian account ID
@@ -5914,6 +5915,11 @@ public type SimplifiedIssueTransition record {|
     IssueTransitionStatus to?;
     # The name of the transition
     string transitionName?;
+|};
+
+public type JiraSingleSelectUserPickerField record {|
+    JiraUserField user?;
+    string fieldId;
 |};
 
 # Represents the Queries record for the operation: getPrecomputations
@@ -5935,11 +5941,6 @@ public type GetPrecomputationsQueries record {
     # The index of the first item to return in a page of results (page offset)
     int startAt = 0;
 };
-
-public type JiraSingleSelectUserPickerField record {|
-    JiraUserField user?;
-    string fieldId;
-|};
 
 # The default value for a Forge collection of groups custom field
 public type CustomFieldContextDefaultValueForgeMultiGroupField record {
@@ -6150,18 +6151,6 @@ public type NotificationSchemeNotificationDetailsPayload record {|
     string notificationType?;
 |};
 
-# Details of an notification scheme
-public type CreateNotificationSchemeDetails record {
-    # The description of the notification scheme.
-    @constraint:String {maxLength: 4000}
-    string description?;
-    # The name of the notification scheme. Must be unique (case-insensitive).
-    @constraint:String {maxLength: 255}
-    string name;
-    # The list of notifications which should be added to the notification scheme.
-    NotificationSchemeEventDetails[] notificationSchemeEvents?;
-};
-
 # The data classification
 public type DataClassificationTagBean record {|
     # The color of the data classification object
@@ -6179,6 +6168,18 @@ public type DataClassificationTagBean record {|
     # The status of the data classification object
     string status;
 |};
+
+# Details of an notification scheme
+public type CreateNotificationSchemeDetails record {
+    # The description of the notification scheme.
+    @constraint:String {maxLength: 4000}
+    string description?;
+    # The name of the notification scheme. Must be unique (case-insensitive).
+    @constraint:String {maxLength: 255}
+    string name;
+    # The list of notifications which should be added to the notification scheme.
+    NotificationSchemeEventDetails[] notificationSchemeEvents?;
+};
 
 # Details of any errors encountered while updating workflow transition rules
 public type WorkflowTransitionRulesUpdateErrors record {|
@@ -6298,6 +6299,12 @@ public type SearchForIssuesUsingJqlQueries record {
     boolean failFast = false;
 };
 
+# The request for updating the default project classification level
+public type UpdateDefaultProjectClassificationBean record {|
+    # The ID of the project classification
+    string id;
+|};
+
 # A workflow transition condition
 public type CreateWorkflowCondition record {|
     # EXPERIMENTAL. The configuration of the transition rule
@@ -6308,12 +6315,6 @@ public type CreateWorkflowCondition record {|
     string 'type?;
     # The compound condition operator
     "AND"|"OR" operator?;
-|};
-
-# The request for updating the default project classification level
-public type UpdateDefaultProjectClassificationBean record {|
-    # The ID of the project classification
-    string id;
 |};
 
 # Represents the Queries record for the operation: getPolicies
@@ -6457,12 +6458,6 @@ public type GetVersionQueries record {
     string expand?;
 };
 
-# Represents the Queries record for the operation: getWorkflowScheme
-public type GetWorkflowSchemeQueries record {
-    # Returns the workflow scheme's draft rather than scheme itself, if set to true. If the workflow scheme does not have a draft, then the workflow scheme is returned
-    boolean returnDraftIfExists = false;
-};
-
 # The payload for creating a status
 public type StatusPayload record {|
     # The conflict strategy for the status already exists. FAIL - Fail execution, this always needs to be unique; USE - Use the existing entity and ignore new entity parameters; NEW - Create a new entity
@@ -6477,6 +6472,12 @@ public type StatusPayload record {|
     ProjectCreateResourceIdentifier pcri?;
 |};
 
+# Represents the Queries record for the operation: getWorkflowScheme
+public type GetWorkflowSchemeQueries record {
+    # Returns the workflow scheme's draft rather than scheme itself, if set to true. If the workflow scheme does not have a draft, then the workflow scheme is returned
+    boolean returnDraftIfExists = false;
+};
+
 # Details of an issue resolution
 public type Resolution record {|
     # The name of the issue resolution
@@ -6489,6 +6490,14 @@ public type Resolution record {|
     string id?;
 |};
 
+# A workflow transition rule
+public type CreateWorkflowTransitionRule record {|
+    # EXPERIMENTAL. The configuration of the transition rule
+    record {} configuration?;
+    # The type of the transition rule
+    string 'type;
+|};
+
 # The list of required status mappings by workflow
 public type RequiredMappingByWorkflows record {|
     # The ID of the source workflow
@@ -6497,14 +6506,6 @@ public type RequiredMappingByWorkflows record {|
     string[] statusIds?;
     # The ID of the target workflow
     string targetWorkflowId?;
-|};
-
-# A workflow transition rule
-public type CreateWorkflowTransitionRule record {|
-    # EXPERIMENTAL. The configuration of the transition rule
-    record {} configuration?;
-    # The type of the transition rule
-    string 'type;
 |};
 
 # The approval configuration of a status within a workflow. Applies only to Jira Service Management approvals
@@ -6625,17 +6626,17 @@ public type IssueEntityProperties record {|
     record {|JsonNode...;|} properties?;
 |};
 
-# Project ID details
-public type ProjectId record {|
-    # The ID of the project
-    string id;
-|};
-
 # An operand that is a JQL keyword. See [Advanced searching - keywords reference](https://confluence.atlassian.com/jiracorecloud/advanced-searching-keywords-reference-765593717.html#Advancedsearching-keywordsreference-EMPTYEMPTY) for more information about operand keywords
 public type KeywordOperand record {
     # The keyword that is the operand value
     "empty" keyword;
 };
+
+# Project ID details
+public type ProjectId record {|
+    # The ID of the project
+    string id;
+|};
 
 # A list of matched issues or errors for each JQL query, in the order the JQL queries were passed
 public type IssueMatches record {|
@@ -6779,6 +6780,15 @@ public type Transitions record {|
     IssueTransition[] transitions?;
 |};
 
+public type IssueLimitReportResponseBean record {|
+    # A list of ids of issues breaching the limit and their field count
+    record {|record {|int...;|}...;|} issuesBreachingLimit?;
+    # A list of ids of issues approaching the limit and their field count
+    record {|record {|int...;|}...;|} issuesApproachingLimit?;
+    # The fields and their defined limits
+    record {|int:Signed32...;|} limits?;
+|};
+
 # Represents the Queries record for the operation: deleteActor
 public type DeleteActorQueries record {
     # The ID of the group to remove from the project role. This parameter cannot be used with the `group` parameter
@@ -6788,15 +6798,6 @@ public type DeleteActorQueries record {
     # The name of the group to remove from the project role. This parameter cannot be used with the `groupId` parameter. As a group's name can change, use of `groupId` is recommended
     string group?;
 };
-
-public type IssueLimitReportResponseBean record {|
-    # A list of ids of issues breaching the limit and their field count
-    record {|record {|int...;|}...;|} issuesBreachingLimit?;
-    # A list of ids of issues approaching the limit and their field count
-    record {|record {|int...;|}...;|} issuesApproachingLimit?;
-    # The fields and their defined limits
-    record {|int:Signed32...;|} limits?;
-|};
 
 # Field mapping for mandatory fields in target
 public type TargetMandatoryFields record {|
@@ -6969,6 +6970,14 @@ public type BulkOperationErrorResult record {|
     int:Signed32 status?;
 |};
 
+# Update projects in a scheme
+public type UpdateProjectsInSchemeRequestBean record {
+    # Projects to add to a scheme
+    PrioritySchemeChangesWithoutMappings add?;
+    # Projects to remove from a scheme
+    PrioritySchemeChangesWithoutMappings remove?;
+};
+
 # Defines the payload for the issue type screen schemes. See https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issue-type-screen-schemes/\#api-rest-api-3-issuetypescreenscheme-post
 public type IssueTypeScreenSchemePayload record {|
     # The name of the issue type screen scheme
@@ -6982,14 +6991,6 @@ public type IssueTypeScreenSchemePayload record {|
     # The IDs of the screen schemes for the issue type IDs and default. A default entry is required to create an issue type screen scheme, it defines the mapping for all issue types without a screen scheme
     record {|ProjectCreateResourceIdentifier...;|} explicitMappings?;
 |};
-
-# Update projects in a scheme
-public type UpdateProjectsInSchemeRequestBean record {
-    # Projects to add to a scheme
-    PrioritySchemeChangesWithoutMappings add?;
-    # Projects to remove from a scheme
-    PrioritySchemeChangesWithoutMappings remove?;
-};
 
 # Issue Bulk Move Payload
 public type IssueBulkMovePayload record {|
@@ -7086,18 +7087,18 @@ public type CustomFieldContextDefaultValueForgeObjectField record {
     record {} 'object?;
 };
 
+# The payload for creating a scope. Defines if a project is team-managed project or company-managed project
+public type ScopePayload record {|
+    # The type of the scope. Use `GLOBAL` or empty for company-managed project, and `PROJECT` for team-managed project
+    "GLOBAL"|"PROJECT" 'type?;
+|};
+
 # Represents the Queries record for the operation: setUserColumns
 public type SetUserColumnsQueries record {
     # The account ID of the user, which uniquely identifies the user across all Atlassian products. For example, *5b10ac8d82e05b22cc7d4ef5*
     @constraint:String {maxLength: 128}
     string accountId?;
 };
-
-# The payload for creating a scope. Defines if a project is team-managed project or company-managed project
-public type ScopePayload record {|
-    # The type of the scope. Use `GLOBAL` or empty for company-managed project, and `PROJECT` for team-managed project
-    "GLOBAL"|"PROJECT" 'type?;
-|};
 
 # Represents the Queries record for the operation: getIssueLimitReport
 public type GetIssueLimitReportQueries record {
@@ -7106,6 +7107,14 @@ public type GetIssueLimitReportQueries record {
     # Usage: Add `?isReturningKeys=true` to the end of the path to request issue keys
     boolean isReturningKeys = false;
 };
+
+# Result for requested redactions
+public type SingleRedactionResponse record {|
+    # An unique id for the redaction request
+    string externalId;
+    # Indicates if redaction was success/failure
+    boolean successful;
+|};
 
 # Represents the Queries record for the operation: getUserGroups
 public type GetUserGroupsQueries record {
@@ -7117,14 +7126,6 @@ public type GetUserGroupsQueries record {
     # This parameter is no longer available. See the [deprecation notice](https://developer.atlassian.com/cloud/jira/platform/deprecation-notice-user-privacy-api-migration-guide/) for details
     string username?;
 };
-
-# Result for requested redactions
-public type SingleRedactionResponse record {|
-    # An unique id for the redaction request
-    string externalId;
-    # Indicates if redaction was success/failure
-    boolean successful;
-|};
 
 # A status category
 public type StatusCategory record {
@@ -7211,6 +7212,14 @@ public type AppWorkflowTransitionRule record {|
     WorkflowTransition transition?;
 |};
 
+# An operand that is a user-provided value
+public type ValueOperand record {
+    # Encoded value, which can be used directly in a JQL query
+    string encodedValue?;
+    # The operand value
+    string value;
+};
+
 public type GetPlanResponse record {|
     # The cross-project releases included in the plan
     GetCrossProjectReleaseResponse[] crossProjectReleases?;
@@ -7235,14 +7244,6 @@ public type GetPlanResponse record {|
     # The plan status. This is "Active", "Trashed" or "Archived"
     "Active"|"Trashed"|"Archived" status;
 |};
-
-# An operand that is a user-provided value
-public type ValueOperand record {
-    # Encoded value, which can be used directly in a JQL query
-    string encodedValue?;
-    # The operand value
-    string value;
-};
 
 # Represents the position of the redaction
 public type RedactionPosition record {|
@@ -7315,6 +7316,14 @@ public type SecuritySchemeLevelBean record {|
     string description?;
 |};
 
+# Details of scheme and new default level
+public type DefaultLevelValue record {
+    # The ID of the issue security level to set as default for the specified scheme. Providing null will reset the default level.
+    string defaultLevelId;
+    # The ID of the issue security scheme to set default level for.
+    string issueSecuritySchemeId;
+};
+
 # Defines the payload for the field screens. See https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-screens/\#api-rest-api-3-screens-post
 public type ScreenPayload record {|
     # The name of the screen
@@ -7326,14 +7335,6 @@ public type ScreenPayload record {|
     # Every project-created entity has an ID that must be unique within the scope of the project creation. PCRI (Project Create Resource Identifier) is a standard format for creating IDs and references to other project entities. PCRI format is defined as follows: pcri:\[entityType\]:\[type\]:\[entityId\] entityType - the type of an entity, e.g. status, role, workflow type - PCRI type, either `id` - The ID of an entity that already exists in the target site, or `ref` - A unique reference to an entity that is being created entityId - entity identifier, if type is `id` - must be an existing entity ID that exists in the Jira site, if `ref` - must be unique across all entities in the scope of this project template creation
     ProjectCreateResourceIdentifier pcri?;
 |};
-
-# Details of scheme and new default level
-public type DefaultLevelValue record {
-    # The ID of the issue security level to set as default for the specified scheme. Providing null will reset the default level.
-    string defaultLevelId;
-    # The ID of the issue security scheme to set default level for.
-    string issueSecuritySchemeId;
-};
 
 # Details of any errors encountered while updating workflow transition rules for a workflow
 public type WorkflowTransitionRulesUpdateErrorDetails record {|
@@ -7359,6 +7360,10 @@ public type ScreenWithTab record {|
     int id?;
 |};
 
+public type JiraColorInput record {|
+    string name;
+|};
+
 # Error messages from an operation
 public type ErrorCollection record {|
     # The list of error messages produced by this operation. For example, "input parameter 'key' must be provided"
@@ -7374,17 +7379,6 @@ public type GetProjectVersionsQueries record {
     string expand?;
 };
 
-public type JiraColorInput record {|
-    string name;
-|};
-
-public type NestedResponse record {|
-    WarningCollection warningCollection?;
-    # Error messages from an operation
-    ErrorCollection errorCollection?;
-    int:Signed32 status?;
-|};
-
 # An [issue](https://developer.atlassian.com/cloud/jira/platform/jira-expressions-type-reference#issue) specified by ID or key. All the fields of the issue object are available in the Jira expression
 public type IssueContextVariable record {
     # The issue ID
@@ -7394,6 +7388,13 @@ public type IssueContextVariable record {
     # The issue key
     string 'key?;
 };
+
+public type NestedResponse record {|
+    WarningCollection warningCollection?;
+    # Error messages from an operation
+    ErrorCollection errorCollection?;
+    int:Signed32 status?;
+|};
 
 # Details of an item associated with the changed record
 public type AssociatedItemBean record {|
@@ -7432,14 +7433,6 @@ public type PageBeanPriority record {|
     int startAt?;
 |};
 
-# Details of a notification scheme event
-public type NotificationSchemeEventDetails record {
-    # The ID of the event.
-    NotificationSchemeEventTypeId event;
-    # The list of notifications mapped to a specified event.
-    NotificationSchemeNotificationDetails[] notifications;
-};
-
 # Details about an attachment
 public type Attachment record {
     # Details of the user who added the attachment.
@@ -7460,6 +7453,14 @@ public type Attachment record {
     int size?;
     # The URL of a thumbnail representing the attachment.
     string thumbnail?;
+};
+
+# Details of a notification scheme event
+public type NotificationSchemeEventDetails record {
+    # The ID of the event.
+    NotificationSchemeEventTypeId event;
+    # The list of notifications mapped to a specified event.
+    NotificationSchemeNotificationDetails[] notifications;
 };
 
 public type JiraSelectedOptionField record {|
@@ -7600,13 +7601,13 @@ public type WorkflowUpdate record {
     DocumentVersion version;
 };
 
+public type ArchiveIssueAsyncRequest record {|
+    string jql?;
+|};
+
 public type WorkflowValidationErrorList record {|
     # The list of validation errors
     WorkflowValidationError[] errors?;
-|};
-
-public type ArchiveIssueAsyncRequest record {|
-    string jql?;
 |};
 
 # Details about a security scheme
@@ -7744,18 +7745,18 @@ public type ParsedJqlQueries record {|
     ParsedJqlQuery[] queries;
 |};
 
+# The ID of a screen scheme
+public type UpdateDefaultScreenScheme record {|
+    # The ID of the screen scheme
+    string screenSchemeId;
+|};
+
 # Details about the default workflow
 public type DefaultWorkflow record {|
     # Whether a draft workflow scheme is created or updated when updating an active workflow scheme. The draft is updated with the new default workflow. Defaults to `false`
     boolean updateDraftIfNeeded?;
     # The name of the workflow to set as the default workflow
     string workflow;
-|};
-
-# The ID of a screen scheme
-public type UpdateDefaultScreenScheme record {|
-    # The ID of the screen scheme
-    string screenSchemeId;
 |};
 
 # Paginated list of worklog details
@@ -8023,6 +8024,20 @@ public type ProjectDetails record {|
     string 'key?;
 |};
 
+# Details of a request to bulk edit shareable entity
+public type BulkEditShareableEntityRequest record {|
+    # The details of change owner action
+    BulkChangeOwnerDetails changeOwnerDetails?;
+    # The permission details to be changed
+    PermissionDetails permissionDetails?;
+    # Whether the actions are executed by users with Administer Jira global permission
+    boolean extendAdminPermissions?;
+    # Allowed action for bulk edit shareable entity
+    "changeOwner"|"changePermission"|"addPermission"|"removePermission" action;
+    # The id list of shareable entities to be changed
+    int[] entityIds;
+|};
+
 # A page of items
 public type PageBeanProjectDetails record {|
     # The number of items returned
@@ -8039,20 +8054,6 @@ public type PageBeanProjectDetails record {|
     string self?;
     # The index of the first item returned
     int startAt?;
-|};
-
-# Details of a request to bulk edit shareable entity
-public type BulkEditShareableEntityRequest record {|
-    # The details of change owner action
-    BulkChangeOwnerDetails changeOwnerDetails?;
-    # The permission details to be changed
-    PermissionDetails permissionDetails?;
-    # Whether the actions are executed by users with Administer Jira global permission
-    boolean extendAdminPermissions?;
-    # Allowed action for bulk edit shareable entity
-    "changeOwner"|"changePermission"|"addPermission"|"removePermission" action;
-    # The id list of shareable entities to be changed
-    int[] entityIds;
 |};
 
 # Workflow schemes using the workflow
@@ -8095,6 +8096,22 @@ public type SanitizedJqlQuery record {|
     ErrorCollection errors?;
 |};
 
+# A list of issue IDs and the value to update a custom field to
+public type CustomFieldValueUpdate record {|
+    # The list of issue IDs
+    int[] issueIds;
+    # The value for the custom field. The value must be compatible with the [custom field type](https://developer.atlassian.com/platform/forge/manifest-reference/modules/jira-custom-field/#data-types) as follows:
+    # 
+    #  *  `string` the value must be a string.
+    #  *  `number` the value must be a number.
+    #  *  `datetime` the value must be a string that represents a date in the ISO format or the simplified extended ISO format. For example, `"2023-01-18T12:00:00-03:00"` or `"2023-01-18T12:00:00.000Z"`. However, the milliseconds part is ignored.
+    #  *  `user` the value must be an object that contains the `accountId` field.
+    #  *  `group` the value must be an object that contains the group `name` or `groupId` field. Because group names can change, we recommend using `groupId`.
+    # 
+    # A list of appropriate values must be provided if the field is of the `list` [collection type](https://developer.atlassian.com/platform/forge/manifest-reference/modules/jira-custom-field/#collection-types)
+    anydata value;
+|};
+
 # A page of items
 public type PageBeanIssueTypeScreenSchemeItem record {|
     # The number of items returned
@@ -8113,32 +8130,6 @@ public type PageBeanIssueTypeScreenSchemeItem record {|
     int startAt?;
 |};
 
-# A list of issue IDs and the value to update a custom field to
-public type CustomFieldValueUpdate record {|
-    # The list of issue IDs
-    int[] issueIds;
-    # The value for the custom field. The value must be compatible with the [custom field type](https://developer.atlassian.com/platform/forge/manifest-reference/modules/jira-custom-field/#data-types) as follows:
-    # 
-    #  *  `string` the value must be a string.
-    #  *  `number` the value must be a number.
-    #  *  `datetime` the value must be a string that represents a date in the ISO format or the simplified extended ISO format. For example, `"2023-01-18T12:00:00-03:00"` or `"2023-01-18T12:00:00.000Z"`. However, the milliseconds part is ignored.
-    #  *  `user` the value must be an object that contains the `accountId` field.
-    #  *  `group` the value must be an object that contains the group `name` or `groupId` field. Because group names can change, we recommend using `groupId`.
-    # 
-    # A list of appropriate values must be provided if the field is of the `list` [collection type](https://developer.atlassian.com/platform/forge/manifest-reference/modules/jira-custom-field/#collection-types)
-    anydata value;
-|};
-
-# List of custom fields using the version
-public type VersionUsageInCustomField record {|
-    # The name of the custom field
-    string fieldName?;
-    # Count of the issues where the custom field contains the version
-    int issueCountWithVersionInCustomField?;
-    # The ID of the custom field
-    int customFieldId?;
-|};
-
 # The description of the page of issues loaded by the provided JQL query
 public type IssuesJqlMetaDataBean record {|
     # Any warnings related to the JQL query. Present only if the validation mode was set to `warn`
@@ -8151,6 +8142,16 @@ public type IssuesJqlMetaDataBean record {|
     int totalCount;
     # The index of the first issue
     int startAt;
+|};
+
+# List of custom fields using the version
+public type VersionUsageInCustomField record {|
+    # The name of the custom field
+    string fieldName?;
+    # Count of the issues where the custom field contains the version
+    int issueCountWithVersionInCustomField?;
+    # The ID of the custom field
+    int customFieldId?;
 |};
 
 # The ID of an issue resolution
@@ -8268,13 +8269,6 @@ public type JiraMultipleSelectField record {|
     string fieldId;
 |};
 
-public type WorkflowUpdateValidateRequestBean record {|
-    # The level of validation to return from the API. If no values are provided, the default would return `WARNING` and `ERROR` level validation results
-    ValidationOptionsForUpdate validationOptions?;
-    # The update workflows payload
-    WorkflowUpdateRequest payload;
-|};
-
 # The payload for defining quick filters
 public type QuickFilterPayload record {|
     # The jql query for the quick filter
@@ -8283,6 +8277,13 @@ public type QuickFilterPayload record {|
     string name?;
     # The description of the quick filter
     string description?;
+|};
+
+public type WorkflowUpdateValidateRequestBean record {|
+    # The level of validation to return from the API. If no values are provided, the default would return `WARNING` and `ERROR` level validation results
+    ValidationOptionsForUpdate validationOptions?;
+    # The update workflows payload
+    WorkflowUpdateRequest payload;
 |};
 
 # Represents the Queries record for the operation: deleteIssueType
@@ -8331,6 +8332,12 @@ public type GetProjectComponentsPaginatedQueries record {
 @constraint:String {maxLength: 128}
 public type GetUserEmailBulkQueriesAccountIdItemsString string;
 
+public type JiraCascadingSelectField record {|
+    JiraSelectedOptionField childOptionValue?;
+    JiraSelectedOptionField parentOptionValue;
+    string fieldId;
+|};
+
 # The payload for creating a condition group in a workflow
 public type ConditionGroupPayload record {|
     # The nested conditions of the condition group
@@ -8339,12 +8346,6 @@ public type ConditionGroupPayload record {|
     RulePayload[] conditions?;
     # Determines how the conditions in the group are evaluated. Accepts either `ANY` or `ALL`. If `ANY` is used, at least one condition in the group must be true for the group to evaluate to true. If `ALL` is used, all conditions in the group must be true for the group to evaluate to true
     "ANY"|"ALL" operation?;
-|};
-
-public type JiraCascadingSelectField record {|
-    JiraSelectedOptionField childOptionValue?;
-    JiraSelectedOptionField parentOptionValue;
-    string fieldId;
 |};
 
 # Represents the Queries record for the operation: deleteResolution
@@ -8371,6 +8372,18 @@ public type PageBeanContextForProjectAndIssueType record {|
     int startAt?;
 |};
 
+# Details of a parsed JQL query
+public type ParsedJqlQuery record {|
+    # The JQL query that was parsed and validated
+    string query;
+    # The list of warning messages
+    string[] warnings?;
+    # The list of syntax or validation errors
+    string[] errors?;
+    # The syntax tree of the query. Empty if the query was invalid
+    JqlQuery structure?;
+|};
+
 # A priority scheme with paginated priorities and projects
 public type PrioritySchemeWithPaginatedPrioritiesAndProjects record {
     boolean default?;
@@ -8390,18 +8403,6 @@ public type PrioritySchemeWithPaginatedPrioritiesAndProjects record {
     # The URL of the priority scheme.
     string self?;
 };
-
-# Details of a parsed JQL query
-public type ParsedJqlQuery record {|
-    # The JQL query that was parsed and validated
-    string query;
-    # The list of warning messages
-    string[] warnings?;
-    # The list of syntax or validation errors
-    string[] errors?;
-    # The syntax tree of the query. Empty if the query was invalid
-    JqlQuery structure?;
-|};
 
 # A page of items
 public type PageBeanSecurityLevelMember record {|
@@ -8568,14 +8569,6 @@ public type SearchAndReconsileIssuesUsingJqlQueries record {
     boolean failFast = false;
 };
 
-# The application the linked item is in
-public type Application record {
-    # The name of the application. Used in conjunction with the (remote) object icon title to display a tooltip for the link's icon. The tooltip takes the format "\[application name\] icon title". Blank items are excluded from the tooltip title. If both items are blank, the icon tooltop displays as "Web Link". Grouping and sorting of links may place links without an application name last.
-    string name?;
-    # The name-spaced type of the application, used by registered rendering apps.
-    string 'type?;
-};
-
 # Contains information about the expression evaluation. This bean will be replacing `JiraExpressionEvaluationMetaDataBean` bean as part of new `evaluate` endpoint
 public type JExpEvaluateMetaDataBean record {|
     # Contains information about the expression complexity. For example, the number of steps it took to evaluate the expression
@@ -8583,6 +8576,14 @@ public type JExpEvaluateMetaDataBean record {|
     # Contains information about the `issues` variable in the context. For example, is the issues were loaded with JQL, information about the page will be included here
     JExpEvaluateIssuesMetaBean issues?;
 |};
+
+# The application the linked item is in
+public type Application record {
+    # The name of the application. Used in conjunction with the (remote) object icon title to display a tooltip for the link's icon. The tooltip takes the format "\[application name\] icon title". Blank items are excluded from the tooltip title. If both items are blank, the icon tooltop displays as "Web Link". Grouping and sorting of links may place links without an application name last.
+    string name?;
+    # The name-spaced type of the application, used by registered rendering apps.
+    string 'type?;
+};
 
 # Details of a filter
 public type FilterDetails record {|
@@ -8625,6 +8626,18 @@ public type ProjectScopeBean record {|
     int id?;
 |};
 
+# The details of a UI modification
+public type UpdateUiModificationDetails record {|
+    # The data of the UI modification. The maximum size of the data is 50000 characters
+    string data?;
+    # The name of the UI modification. The maximum length is 255 characters
+    string name?;
+    # The description of the UI modification. The maximum length is 255 characters
+    string description?;
+    # List of contexts of the UI modification. The maximum number of contexts is 1000. If provided, replaces all existing contexts
+    UiModificationContextDetails[] contexts?;
+|};
+
 # The details about a workflow validation error
 public type WorkflowValidationError record {|
     # An error code
@@ -8637,18 +8650,6 @@ public type WorkflowValidationError record {|
     string message?;
     # The type of element the error or warning references
     "RULE"|"STATUS"|"STATUS_LAYOUT"|"STATUS_PROPERTY"|"WORKFLOW"|"TRANSITION"|"TRANSITION_PROPERTY"|"SCOPE"|"STATUS_MAPPING"|"TRIGGER" 'type?;
-|};
-
-# The details of a UI modification
-public type UpdateUiModificationDetails record {|
-    # The data of the UI modification. The maximum size of the data is 50000 characters
-    string data?;
-    # The name of the UI modification. The maximum length is 255 characters
-    string name?;
-    # The description of the UI modification. The maximum length is 255 characters
-    string description?;
-    # List of contexts of the UI modification. The maximum number of contexts is 1000. If provided, replaces all existing contexts
-    UiModificationContextDetails[] contexts?;
 |};
 
 # A custom field and its new value with a list of issue to update
@@ -8721,11 +8722,6 @@ public type GetRecentQueries record {
     StringList[] properties?;
 };
 
-public type NotificationSchemeAndProjectMappingJsonBean record {|
-    string notificationSchemeId?;
-    string projectId?;
-|};
-
 # Represents the Queries record for the operation: parseJqlQueries
 public type ParseJqlQueriesQueries record {
     # How to validate the JQL query and treat the validation results. Validation options include:
@@ -8735,6 +8731,11 @@ public type ParseJqlQueriesQueries record {
     #  *  `none` No validation is performed. If JQL query is correctly formed, the query structure is returned
     "strict"|"warn"|"none" validation = "strict";
 };
+
+public type NotificationSchemeAndProjectMappingJsonBean record {|
+    string notificationSchemeId?;
+    string projectId?;
+|};
 
 # A page of items
 public type PageBeanIssueTypeSchemeProjects record {|
@@ -9084,6 +9085,24 @@ public type IssueTypesWorkflowMapping record {|
     string[] issueTypes?;
 |};
 
+# A page of items
+public type PageBeanField record {|
+    # The number of items returned
+    int total?;
+    # Whether this is the last page
+    boolean isLast?;
+    # The maximum number of items that could be returned
+    int:Signed32 maxResults?;
+    # If there is another page of results, the URL of the next page
+    string nextPage?;
+    # The list of items
+    Field[] values?;
+    # The URL of the page
+    string self?;
+    # The index of the first item returned
+    int startAt?;
+|};
+
 # A list of custom field details
 public type ConnectCustomFieldValue record {
     # The value of number type custom field when `_type` is `NumberIssueField`
@@ -9104,24 +9123,6 @@ public type ConnectCustomFieldValue record {
     # The custom field ID
     int fieldID;
 };
-
-# A page of items
-public type PageBeanField record {|
-    # The number of items returned
-    int total?;
-    # Whether this is the last page
-    boolean isLast?;
-    # The maximum number of items that could be returned
-    int:Signed32 maxResults?;
-    # If there is another page of results, the URL of the next page
-    string nextPage?;
-    # The list of items
-    Field[] values?;
-    # The URL of the page
-    string self?;
-    # The index of the first item returned
-    int startAt?;
-|};
 
 public type WorkflowCapabilities record {|
     # The Atlassian provided system rules available
@@ -9286,24 +9287,6 @@ public type JiraMultiSelectComponentField record {|
     string fieldId;
 |};
 
-# A page of items
-public type PageBeanComponentWithIssueCount record {|
-    # The number of items returned
-    int total?;
-    # Whether this is the last page
-    boolean isLast?;
-    # The maximum number of items that could be returned
-    int:Signed32 maxResults?;
-    # If there is another page of results, the URL of the next page
-    string nextPage?;
-    # The list of items
-    ComponentWithIssueCount[] values?;
-    # The URL of the page
-    string self?;
-    # The index of the first item returned
-    int startAt?;
-|};
-
 # Defines the payload for the fields, screens, screen schemes, issue type screen schemes, field layouts, and field layout schemes
 public type FieldCapabilityPayload record {|
     # The issue layouts configuration
@@ -9320,6 +9303,24 @@ public type FieldCapabilityPayload record {|
     ScreenSchemePayload[]? screenScheme?;
     # The field layouts configuration
     FieldLayoutPayload[]? fieldLayouts?;
+|};
+
+# A page of items
+public type PageBeanComponentWithIssueCount record {|
+    # The number of items returned
+    int total?;
+    # Whether this is the last page
+    boolean isLast?;
+    # The maximum number of items that could be returned
+    int:Signed32 maxResults?;
+    # If there is another page of results, the URL of the next page
+    string nextPage?;
+    # The list of items
+    ComponentWithIssueCount[] values?;
+    # The URL of the page
+    string self?;
+    # The index of the first item returned
+    int startAt?;
 |};
 
 # Details of field associations with projects
@@ -9353,20 +9354,6 @@ public type WorkflowSchemeReadRequest record {|
     string[]? projectIds?;
 |};
 
-# Details of the status being updated
-public type WorkflowStatusUpdate record {
-    # The description of the status.
-    string description?;
-    # The ID of the status.
-    string id?;
-    # The name of the status.
-    string name;
-    # The category of the status.
-    "TODO"|"IN_PROGRESS"|"DONE" statusCategory;
-    # The reference of the status.
-    string statusReference;
-};
-
 # A page of items
 public type PageBeanIssueFieldOption record {|
     # The number of items returned
@@ -9385,12 +9372,19 @@ public type PageBeanIssueFieldOption record {|
     int startAt?;
 |};
 
-public type GetIssueSourceResponse record {|
-    # The issue source type. This is "Board", "Project" or "Filter"
-    "Board"|"Project"|"Filter"|"Custom" 'type;
-    # The issue source value. This is a board ID if the type is "Board", a project ID if the type is "Project" or a filter ID if the type is "Filter"
-    int value;
-|};
+# Details of the status being updated
+public type WorkflowStatusUpdate record {
+    # The description of the status.
+    string description?;
+    # The ID of the status.
+    string id?;
+    # The name of the status.
+    string name;
+    # The category of the status.
+    "TODO"|"IN_PROGRESS"|"DONE" statusCategory;
+    # The reference of the status.
+    string statusReference;
+};
 
 # The group or role to which this item is visible
 public type Visibility record {
@@ -9413,6 +9407,21 @@ public type GetFilterQueries record {
     string expand?;
 };
 
+public type GetIssueSourceResponse record {|
+    # The issue source type. This is "Board", "Project" or "Filter"
+    "Board"|"Project"|"Filter"|"Custom" 'type;
+    # The issue source value. This is a board ID if the type is "Board", a project ID if the type is "Project" or a filter ID if the type is "Filter"
+    int value;
+|};
+
+# Request to create a project using a custom template
+public type ProjectCustomTemplateCreateRequestDTO record {|
+    # The specific request object for creating a project with template
+    CustomTemplateRequestDTO template?;
+    # Project Details
+    CustomTemplatesProjectDetails details?;
+|};
+
 # A project's sender email address
 public type ProjectEmailAddress record {|
     # The email address
@@ -9427,14 +9436,6 @@ public type WorkflowProjectUsageDTO record {|
     ProjectUsagePage projects?;
     # The workflow ID
     string workflowId?;
-|};
-
-# Request to create a project using a custom template
-public type ProjectCustomTemplateCreateRequestDTO record {|
-    # The specific request object for creating a project with template
-    CustomTemplateRequestDTO template?;
-    # Project Details
-    CustomTemplatesProjectDetails details?;
 |};
 
 # Configuration of the announcement banner
@@ -9457,6 +9458,16 @@ public type IssueFilterForBulkPropertyDelete record {|
     int[] entityIds?;
 |};
 
+# A clause that asserts the current value of a field. For example, `summary ~ test`
+public type FieldValueClause record {
+    # A field used in a JQL query. See [Advanced searching - fields reference](https://confluence.atlassian.com/x/dAiiLQ) for more information about fields in JQL queries
+    JqlQueryField 'field;
+    # Details of an operand in a JQL clause
+    JqlQueryClauseOperand operand;
+    # The operator between the field and operand
+    "="|"!="|">"|"<"|">="|"<="|"in"|"not in"|"~"|"~="|"is"|"is not" operator;
+};
+
 # Represents the Queries record for the operation: getPermissionScheme
 public type GetPermissionSchemeQueries record {
     # Use expand to include additional information in the response. This parameter accepts a comma-separated list. Note that permissions are included when you specify any value. Expand options include:
@@ -9468,16 +9479,6 @@ public type GetPermissionSchemeQueries record {
     #  *  `projectRole` Returns information about the project role granted the permission.
     #  *  `user` Returns information about the user who is granted the permission
     string expand?;
-};
-
-# A clause that asserts the current value of a field. For example, `summary ~ test`
-public type FieldValueClause record {
-    # A field used in a JQL query. See [Advanced searching - fields reference](https://confluence.atlassian.com/x/dAiiLQ) for more information about fields in JQL queries
-    JqlQueryField 'field;
-    # Details of an operand in a JQL clause
-    JqlQueryClauseOperand operand;
-    # The operator between the field and operand
-    "="|"!="|">"|"<"|">="|"<="|"in"|"not in"|"~"|"~="|"is"|"is not" operator;
 };
 
 # Represents the Queries record for the operation: deleteFavouriteForFilter
@@ -9573,6 +9574,14 @@ public type BulkCustomFieldOptionCreateRequest record {|
     CustomFieldOptionCreate[] options?;
 |};
 
+# The payload for the layout details for the destination end of a transition
+public type ToLayoutPayload record {|
+    # Defines where the transition line will be connected to a status. Port 0 to 7 are acceptable values
+    int:Signed32 port?;
+    # Every project-created entity has an ID that must be unique within the scope of the project creation. PCRI (Project Create Resource Identifier) is a standard format for creating IDs and references to other project entities. PCRI format is defined as follows: pcri:\[entityType\]:\[type\]:\[entityId\] entityType - the type of an entity, e.g. status, role, workflow type - PCRI type, either `id` - The ID of an entity that already exists in the target site, or `ref` - A unique reference to an entity that is being created entityId - entity identifier, if type is `id` - must be an existing entity ID that exists in the Jira site, if `ref` - must be unique across all entities in the scope of this project template creation
+    ProjectCreateResourceIdentifier status?;
+|};
+
 # The statuses referenced in the workflow
 public type WorkflowReferenceStatus record {|
     # The x and y location of the status in the workflow
@@ -9585,14 +9594,6 @@ public type WorkflowReferenceStatus record {|
     ApprovalConfiguration? approvalConfiguration?;
     # The properties associated with the status
     record {|string...;|} properties?;
-|};
-
-# The payload for the layout details for the destination end of a transition
-public type ToLayoutPayload record {|
-    # Defines where the transition line will be connected to a status. Port 0 to 7 are acceptable values
-    int:Signed32 port?;
-    # Every project-created entity has an ID that must be unique within the scope of the project creation. PCRI (Project Create Resource Identifier) is a standard format for creating IDs and references to other project entities. PCRI format is defined as follows: pcri:\[entityType\]:\[type\]:\[entityId\] entityType - the type of an entity, e.g. status, role, workflow type - PCRI type, either `id` - The ID of an entity that already exists in the target site, or `ref` - A unique reference to an entity that is being created entityId - entity identifier, if type is `id` - must be an existing entity ID that exists in the Jira site, if `ref` - must be unique across all entities in the scope of this project template creation
-    ProjectCreateResourceIdentifier status?;
 |};
 
 # The ID of a screen scheme
@@ -9689,17 +9690,17 @@ public type ScreenSchemePayload record {|
     ProjectCreateResourceIdentifier pcri?;
 |};
 
-public type Error record {|
-    int count?;
-    string[] issueIdsOrKeys?;
-    string message?;
-|};
-
 public type JiraExpressionEvaluationMetaDataBean record {|
     # Contains information about the expression complexity. For example, the number of steps it took to evaluate the expression
     JiraExpressionsComplexityBean complexity?;
     # Contains information about the `issues` variable in the context. For example, is the issues were loaded with JQL, information about the page will be included here
     IssuesMetaBean issues?;
+|};
+
+public type Error record {|
+    int count?;
+    string[] issueIdsOrKeys?;
+    string message?;
 |};
 
 # An audit record
@@ -9746,18 +9747,6 @@ public type CustomFieldContextOption record {|
     string value;
 |};
 
-# Represents the Queries record for the operation: getProjectsByPriorityScheme
-public type GetProjectsByPrioritySchemeQueries record {
-    # The maximum number of items to return per page
-    string maxResults = "50";
-    # The string to query projects on by name
-    string query = "";
-    # The project IDs to filter by. For example, `projectId=10000&projectId=10001`
-    int[] projectId?;
-    # The index of the first item to return in a page of results (page offset)
-    string startAt = "0";
-};
-
 public type BulkFetchIssueRequestBean record {|
     # Use [expand](#expansion) to include additional information about issues in the response. Note that, unlike the majority of instances where `expand` is specified, `expand` is defined as a list of values. The expand options are:
     # 
@@ -9795,6 +9784,18 @@ public type BulkFetchIssueRequestBean record {|
     # A list of issue property keys of issue properties to be included in the results. A maximum of 5 issue property keys can be specified
     string[] properties?;
 |};
+
+# Represents the Queries record for the operation: getProjectsByPriorityScheme
+public type GetProjectsByPrioritySchemeQueries record {
+    # The maximum number of items to return per page
+    string maxResults = "50";
+    # The string to query projects on by name
+    string query = "";
+    # The project IDs to filter by. For example, `projectId=10000&projectId=10001`
+    int[] projectId?;
+    # The index of the first item to return in a page of results (page offset)
+    string startAt = "0";
+};
 
 # The response for status request for a running/completed export task
 public type ExportArchivedIssuesTaskProgressResponse record {|
@@ -10340,15 +10341,6 @@ public type JqlQuery record {|
     JqlQueryClause 'where?;
 |};
 
-public type DeleteAndReplaceVersionBean record {|
-    # The ID of the version to update `affectedVersion` to when the field contains the deleted version
-    int moveAffectedIssuesTo?;
-    # The ID of the version to update `fixVersion` to when the field contains the deleted version
-    int moveFixIssuesTo?;
-    # An array of custom field IDs (`customFieldId`) and version IDs (`moveTo`) to update when the fields contain the deleted version
-    CustomFieldReplacement[] customFieldReplacementList?;
-|};
-
 # Represents the Queries record for the operation: getPermissionSchemeGrant
 public type GetPermissionSchemeGrantQueries record {
     # Use expand to include additional information in the response. This parameter accepts a comma-separated list. Note that permissions are always included when you specify any value. Expand options include:
@@ -10361,6 +10353,15 @@ public type GetPermissionSchemeGrantQueries record {
     #  *  `user` Returns information about the user who is granted the permission
     string expand?;
 };
+
+public type DeleteAndReplaceVersionBean record {|
+    # The ID of the version to update `affectedVersion` to when the field contains the deleted version
+    int moveAffectedIssuesTo?;
+    # The ID of the version to update `fixVersion` to when the field contains the deleted version
+    int moveFixIssuesTo?;
+    # An array of custom field IDs (`customFieldId`) and version IDs (`moveTo`) to update when the fields contain the deleted version
+    CustomFieldReplacement[] customFieldReplacementList?;
+|};
 
 # The request payload to get the required mappings for updating a workflow scheme
 public type WorkflowSchemeUpdateRequiredMappingsRequest record {|
@@ -10431,6 +10432,12 @@ public type SystemAvatars record {|
     Avatar[] system?;
 |};
 
+# The account ID of the new owner
+public type ChangeFilterOwner record {|
+    # The account ID of the new owner
+    string accountId;
+|};
+
 # Represents the Queries record for the operation: updatePermissionScheme
 public type UpdatePermissionSchemeQueries record {
     # Use expand to include additional information in the response. This parameter accepts a comma-separated list. Note that permissions are always included when you specify any value. Expand options include:
@@ -10443,12 +10450,6 @@ public type UpdatePermissionSchemeQueries record {
     #  *  `user` Returns information about the user who is granted the permission
     string expand?;
 };
-
-# The account ID of the new owner
-public type ChangeFilterOwner record {|
-    # The account ID of the new owner
-    string accountId;
-|};
 
 # The details of votes on an issue
 public type Votes record {|
@@ -10518,13 +10519,6 @@ public type Context record {|
     int id?;
 |};
 
-public type GetCustomFieldResponse record {|
-    # Allows filtering issues based on their values for the custom field
-    boolean filter?;
-    # The custom field ID
-    int customFieldId;
-|};
-
 # Represents the Queries record for the operation: getUsersFromGroup
 public type GetUsersFromGroupQueries record {
     # Include inactive users
@@ -10539,6 +10533,13 @@ public type GetUsersFromGroupQueries record {
     # The index of the first item to return in a page of results (page offset)
     int startAt = 0;
 };
+
+public type GetCustomFieldResponse record {|
+    # Allows filtering issues based on their values for the custom field
+    boolean filter?;
+    # The custom field ID
+    int customFieldId;
+|};
 
 # Details about an issue
 public type IssueBean record {|
@@ -10620,6 +10621,12 @@ public type JQLCountRequestBean record {|
     string jql?;
 |};
 
+# Represents the Queries record for the operation: deleteIssue
+public type DeleteIssueQueries record {
+    # Whether the issue's subtasks are deleted when the issue is deleted
+    "true"|"false" deleteSubtasks = "false";
+};
+
 # Details of a user, group, field, or project role that holds a permission. See [Holder object](../api-group-permission-schemes/#holder-object) in *Get all permission schemes* for more information
 public type PermissionHolder record {|
     # Expand options that include additional permission holder details in the response
@@ -10632,12 +10639,6 @@ public type PermissionHolder record {|
     string value?;
 |};
 
-# Represents the Queries record for the operation: deleteIssue
-public type DeleteIssueQueries record {
-    # Whether the issue's subtasks are deleted when the issue is deleted
-    "true"|"false" deleteSubtasks = "false";
-};
-
 public type RolesCapabilityPayload record {|
     # The list of roles to create
     RolePayload[] roles?;
@@ -10645,15 +10646,15 @@ public type RolesCapabilityPayload record {|
     record {|ProjectCreateResourceIdentifier[]...;|} roleToProjectActors?;
 |};
 
+public type JiraUserField record {|
+    string accountId;
+|};
+
 # The ID of the issue security scheme
 public type SecuritySchemeId record {
     # The ID of the issue security scheme.
     string id;
 };
-
-public type JiraUserField record {|
-    string accountId;
-|};
 
 # A list of issues suggested for use in auto-completion
 public type IssuePickerSuggestions record {|
@@ -10771,18 +10772,18 @@ public type IssueUpdateDetails record {
     record {|FieldUpdateOperation[]...;|} update?;
 };
 
-# A list of issue link type beans
-public type IssueLinkTypes record {|
-    # The issue link type bean
-    IssueLinkType[] issueLinkTypes?;
-|};
-
 # Default value for a labels custom field
 public type CustomFieldContextDefaultValueLabels record {
     string 'type;
     # The default labels value
     string[] labels;
 };
+
+# A list of issue link type beans
+public type IssueLinkTypes record {|
+    # The issue link type bean
+    IssueLinkType[] issueLinkTypes?;
+|};
 
 # Represents the Queries record for the operation: getIssueTypeSchemesMapping
 public type GetIssueTypeSchemesMappingQueries record {
@@ -10874,6 +10875,35 @@ public type ActorsMap record {|
     string[] group?;
 |};
 
+# The JQL specifying the issues available in the evaluated Jira expression under the `issues` context variable. This bean will be replacing `JexpIssues` bean as part of new `evaluate` endpoint
+public type JexpEvaluateCtxIssues record {|
+    # The JQL query that specifies the set of issues available in the Jira expression
+    JexpEvaluateCtxJqlIssues jql?;
+|};
+
+# The default value for a project custom field
+public type CustomFieldContextDefaultValueProject record {
+    # The ID of the context
+    string contextId;
+    string 'type;
+    # The ID of the default project
+    string projectId;
+};
+
+# Details about an project using security scheme mapping
+public type IssueSecuritySchemeToProjectMapping record {
+    string issueSecuritySchemeId?;
+    string projectId?;
+};
+
+# A time predicate for a temporal JQL clause
+public type JqlQueryClauseTimePredicate record {
+    # Details of an operand in a JQL clause
+    JqlQueryClauseOperand operand;
+    # The operator between the field and the operand
+    "before"|"after"|"from"|"to"|"on"|"during"|"by" operator;
+};
+
 # Details about a workflow scheme
 public type WorkflowScheme record {|
     # For draft workflow schemes, this property is the name of the default workflow for the original workflow scheme. The default workflow has *All Unassigned Issue Types* assigned to it in Jira
@@ -10908,35 +10938,6 @@ public type WorkflowScheme record {|
     # The issue type to workflow mappings, where each mapping is an issue type ID and workflow name pair. Note that an issue type can only be mapped to one workflow in a workflow scheme
     record {|string...;|} issueTypeMappings?;
 |};
-
-# The JQL specifying the issues available in the evaluated Jira expression under the `issues` context variable. This bean will be replacing `JexpIssues` bean as part of new `evaluate` endpoint
-public type JexpEvaluateCtxIssues record {|
-    # The JQL query that specifies the set of issues available in the Jira expression
-    JexpEvaluateCtxJqlIssues jql?;
-|};
-
-# The default value for a project custom field
-public type CustomFieldContextDefaultValueProject record {
-    # The ID of the context
-    string contextId;
-    string 'type;
-    # The ID of the default project
-    string projectId;
-};
-
-# A time predicate for a temporal JQL clause
-public type JqlQueryClauseTimePredicate record {
-    # Details of an operand in a JQL clause
-    JqlQueryClauseOperand operand;
-    # The operator between the field and the operand
-    "before"|"after"|"from"|"to"|"on"|"during"|"by" operator;
-};
-
-# Details about an project using security scheme mapping
-public type IssueSecuritySchemeToProjectMapping record {
-    string issueSecuritySchemeId?;
-    string projectId?;
-};
 
 # A screen tab
 public type ScreenableTab record {|
@@ -11050,6 +11051,13 @@ public type CustomFieldContextDefaultValueMultipleVersionPicker record {
     string 'type;
 };
 
+public type JiraLabelsField record {|
+    JiraLabelPropertiesInputJackson1[] labelProperties?;
+    "ADD"|"REMOVE"|"REPLACE"|"REMOVE_ALL" bulkEditMultiSelectFieldOption;
+    string fieldId;
+    JiraLabelsInput[] labels;
+|};
+
 # Represents the Queries record for the operation: findAssignableUsers
 public type FindAssignableUsersQueries record {
     # A query string that is matched exactly against user `accountId`. Required, unless `query` is specified
@@ -11075,13 +11083,6 @@ public type FindAssignableUsersQueries record {
     # This parameter is no longer available. See the [deprecation notice](https://developer.atlassian.com/cloud/jira/platform/deprecation-notice-user-privacy-api-migration-guide/) for details
     string username?;
 };
-
-public type JiraLabelsField record {|
-    JiraLabelPropertiesInputJackson1[] labelProperties?;
-    "ADD"|"REMOVE"|"REPLACE"|"REMOVE_ALL" bulkEditMultiSelectFieldOption;
-    string fieldId;
-    JiraLabelsInput[] labels;
-|};
 
 # Represents the Queries record for the operation: addComment
 public type AddCommentQueries record {
@@ -11112,20 +11113,20 @@ public type AvailableWorkflowTriggers record {|
     string ruleKey;
 |};
 
-# Represents the Queries record for the operation: getFailedWebhooks
-public type GetFailedWebhooksQueries record {
-    # The maximum number of webhooks to return per page. If obeying the maxResults directive would result in records with the same failure time being split across pages, the directive is ignored and all records with the same failure time included on the page
-    int:Signed32 maxResults?;
-    # The time after which any webhook failure must have occurred for the record to be returned, expressed as milliseconds since the UNIX epoch
-    int after?;
-};
-
 # Represents the Queries record for the operation: deleteStatusesById
 public type DeleteStatusesByIdQueries record {
     # The list of status IDs. To include multiple IDs, provide an ampersand-separated list. For example, id=10000&id=10001.
     # 
     # Min items `1`, Max items `50`
     string[] id;
+};
+
+# Represents the Queries record for the operation: getFailedWebhooks
+public type GetFailedWebhooksQueries record {
+    # The maximum number of webhooks to return per page. If obeying the maxResults directive would result in records with the same failure time being split across pages, the directive is ignored and all records with the same failure time included on the page
+    int:Signed32 maxResults?;
+    # The time after which any webhook failure must have occurred for the record to be returned, expressed as milliseconds since the UNIX epoch
+    int after?;
 };
 
 # Lists of JQL reference data
@@ -11170,14 +11171,6 @@ public type GetProjectUsagesForStatusQueries record {
     int:Signed32 maxResults = 50;
 };
 
-# Details of a screen
-public type ScreenDetails record {|
-    # The name of the screen. The name must be unique. The maximum length is 255 characters
-    string name;
-    # The description of the screen. The maximum length is 255 characters
-    string description?;
-|};
-
 # Identifiers for a project
 public type ProjectIdentifiers record {|
     # The URL of the created project
@@ -11186,6 +11179,14 @@ public type ProjectIdentifiers record {|
     int id;
     # The key of the created project
     string 'key;
+|};
+
+# Details of a screen
+public type ScreenDetails record {|
+    # The name of the screen. The name must be unique. The maximum length is 255 characters
+    string name;
+    # The description of the screen. The maximum length is 255 characters
+    string description?;
 |};
 
 # Represents the Queries record for the operation: getUserPropertyKeys
@@ -11213,18 +11214,6 @@ public type GetProjectContextMappingQueries record {
     int startAt = 0;
 };
 
-# Mapping of issue priorities for changes in priority schemes
-public type PriorityMapping record {|
-    # The mapping of priorities for issues being migrated **into** this priority scheme. Key is the old priority ID, value is the new priority ID (must exist in this priority scheme).
-    # 
-    # E.g. The current priority scheme has priority ID `10001`. Issues with priority ID `10000` are being migrated into this priority scheme will need mapping to new priorities. The `in` mapping would be `{"10000": 10001}`
-    record {|int...;|} 'in?;
-    # The mapping of priorities for issues being migrated **out of** this priority scheme. Key is the old priority ID (must exist in this priority scheme), value is the new priority ID (must exist in the default priority scheme). Required for updating an existing priority scheme. Not used when creating a new priority scheme.
-    # 
-    # E.g. The current priority scheme has priority ID `10001`. Issues with priority ID `10001` are being migrated out of this priority scheme will need mapping to new priorities. The `out` mapping would be `{"10001": 10000}`
-    record {|int...;|} out?;
-|};
-
 # Details of the contextual configuration for a custom field
 public type ContextualConfiguration record {|
     # The ID of the field context the configuration is associated with
@@ -11235,6 +11224,18 @@ public type ContextualConfiguration record {|
     anydata configuration?;
     # The ID of the configuration
     string id;
+|};
+
+# Mapping of issue priorities for changes in priority schemes
+public type PriorityMapping record {|
+    # The mapping of priorities for issues being migrated **into** this priority scheme. Key is the old priority ID, value is the new priority ID (must exist in this priority scheme).
+    # 
+    # E.g. The current priority scheme has priority ID `10001`. Issues with priority ID `10000` are being migrated into this priority scheme will need mapping to new priorities. The `in` mapping would be `{"10000": 10001}`
+    record {|int...;|} 'in?;
+    # The mapping of priorities for issues being migrated **out of** this priority scheme. Key is the old priority ID (must exist in this priority scheme), value is the new priority ID (must exist in the default priority scheme). Required for updating an existing priority scheme. Not used when creating a new priority scheme.
+    # 
+    # E.g. The current priority scheme has priority ID `10001`. Issues with priority ID `10001` are being migrated out of this priority scheme will need mapping to new priorities. The `out` mapping would be `{"10001": 10000}`
+    record {|int...;|} out?;
 |};
 
 public type CreateExclusionRulesRequest record {|
@@ -11284,6 +11285,12 @@ public type CustomFieldContextProjectMapping record {|
     boolean isGlobalContext?;
 |};
 
+# Details of the order-by JQL clause
+public type JqlQueryOrderByClause record {|
+    # The list of order-by clause fields and their ordering directives
+    JqlQueryOrderByClauseElement[] fields;
+|};
+
 # A page of items
 public type PageBeanString record {|
     # The number of items returned
@@ -11300,12 +11307,6 @@ public type PageBeanString record {|
     string self?;
     # The index of the first item returned
     int startAt?;
-|};
-
-# Details of the order-by JQL clause
-public type JqlQueryOrderByClause record {|
-    # The list of order-by clause fields and their ordering directives
-    JqlQueryOrderByClauseElement[] fields;
 |};
 
 # A list of changelog IDs
@@ -11554,6 +11555,24 @@ public type SearchProjectsQueries record {
     ("live"|"archived"|"deleted")[] status?;
 };
 
+# A page of items
+public type PageBeanContextualConfiguration record {|
+    # The number of items returned
+    int total?;
+    # Whether this is the last page
+    boolean isLast?;
+    # The maximum number of items that could be returned
+    int:Signed32 maxResults?;
+    # If there is another page of results, the URL of the next page
+    string nextPage?;
+    # The list of items
+    ContextualConfiguration[] values?;
+    # The URL of the page
+    string self?;
+    # The index of the first item returned
+    int startAt?;
+|};
+
 # Details of the name, description, and default issue type for an issue type scheme
 public type IssueTypeSchemeUpdateDetails record {|
     # The ID of the default issue type of the issue type scheme
@@ -11582,24 +11601,6 @@ public type ProjectFeature record {|
     "ENABLED"|"DISABLED"|"COMING_SOON" state?;
     # The ID of the project
     int projectId?;
-|};
-
-# A page of items
-public type PageBeanContextualConfiguration record {|
-    # The number of items returned
-    int total?;
-    # Whether this is the last page
-    boolean isLast?;
-    # The maximum number of items that could be returned
-    int:Signed32 maxResults?;
-    # If there is another page of results, the URL of the next page
-    string nextPage?;
-    # The list of items
-    ContextualConfiguration[] values?;
-    # The URL of the page
-    string self?;
-    # The index of the first item returned
-    int startAt?;
 |};
 
 # The trigger configuration associated with a workflow
@@ -11668,6 +11669,12 @@ public type JqlQueryFieldEntityProperty record {
     string 'key;
 };
 
+# Represents the Queries record for the operation: deleteComponent
+public type DeleteComponentQueries record {
+    # The ID of the component to replace the deleted component. If this value is null no replacement is made
+    string moveIssuesTo?;
+};
+
 # Represents the Queries record for the operation: findBulkAssignableUsers
 public type FindBulkAssignableUsersQueries record {
     # A query string that is matched exactly against user `accountId`. Required, unless `query` is specified
@@ -11683,12 +11690,6 @@ public type FindBulkAssignableUsersQueries record {
     int:Signed32 startAt = 0;
     # This parameter is no longer available. See the [deprecation notice](https://developer.atlassian.com/cloud/jira/platform/deprecation-notice-user-privacy-api-migration-guide/) for details
     string username?;
-};
-
-# Represents the Queries record for the operation: deleteComponent
-public type DeleteComponentQueries record {
-    # The ID of the component to replace the deleted component. If this value is null no replacement is made
-    string moveIssuesTo?;
 };
 
 # The project
@@ -11715,15 +11716,6 @@ public type PageBeanWorkflowScheme record {|
     int startAt?;
 |};
 
-public type WorkflowUpdateResponse record {|
-    # List of updated statuses
-    JiraWorkflowStatus[] statuses?;
-    # List of updated workflows
-    JiraWorkflow[] workflows?;
-    # If there is a [asynchronous task](#async-operations) operation, as a result of this update
-    string? taskId?;
-|};
-
 # A page of CreateMetaIssueTypes
 public type PageOfCreateMetaIssueTypes record {
     IssueTypeIssueCreateMetadata[] createMetaIssueType?;
@@ -11736,6 +11728,15 @@ public type PageOfCreateMetaIssueTypes record {
     # The total number of items in all pages.
     int total?;
 };
+
+public type WorkflowUpdateResponse record {|
+    # List of updated statuses
+    JiraWorkflowStatus[] statuses?;
+    # List of updated workflows
+    JiraWorkflow[] workflows?;
+    # If there is a [asynchronous task](#async-operations) operation, as a result of this update
+    string? taskId?;
+|};
 
 # Details of the group associated with the role
 public type ProjectRoleGroup record {|
@@ -11806,12 +11807,10 @@ public type SuggestedIssue record {|
     string 'key?;
 |};
 
-# The mapping of old to new status ID
-public type StatusMigration record {
-    # The new status ID.
-    string newStatusReference;
-    # The old status ID.
-    string oldStatusReference;
+# Represents the Queries record for the operation: copyDashboard
+public type CopyDashboardQueries record {
+    # Whether admin level permissions are used. It should only be true if the user has *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg)
+    boolean extendAdminPermissions = false;
 };
 
 # Represents the Queries record for the operation: getUser
@@ -11830,10 +11829,12 @@ public type GetUserQueries record {
     string username?;
 };
 
-# Represents the Queries record for the operation: copyDashboard
-public type CopyDashboardQueries record {
-    # Whether admin level permissions are used. It should only be true if the user has *Administer Jira* [global permission](https://confluence.atlassian.com/x/x4dKLg)
-    boolean extendAdminPermissions = false;
+# The mapping of old to new status ID
+public type StatusMigration record {
+    # The new status ID.
+    string newStatusReference;
+    # The old status ID.
+    string oldStatusReference;
 };
 
 # A page of items
@@ -11868,12 +11869,6 @@ public type IssuesUpdateBean record {
 public type JiraLabelsInput record {|
     string name;
 |};
-
-# Represents the Queries record for the operation: getAllScreenTabs
-public type GetAllScreenTabsQueries record {
-    # The key of the project
-    string projectKey?;
-};
 
 # Details about a component with a count of the issues it contains
 public type ComponentWithIssueCount record {|
@@ -11915,6 +11910,12 @@ public type ComponentWithIssueCount record {|
     int projectId?;
 |};
 
+# Represents the Queries record for the operation: getAllScreenTabs
+public type GetAllScreenTabsQueries record {
+    # The key of the project
+    string projectKey?;
+};
+
 # Default value for a float (number) custom field
 public type CustomFieldContextDefaultValueFloat record {
     # The default floating-point number
@@ -11952,14 +11953,6 @@ public type PublishDraftWorkflowSchemeQueries record {
     boolean validateOnly = false;
 };
 
-# The scope of the workflow
-public type WorkflowScope record {|
-    # Project ID details
-    ProjectId? project?;
-    # The scope of the workflow. `GLOBAL` for company-managed projects and `PROJECT` for team-managed projects
-    "PROJECT"|"GLOBAL" 'type?;
-|};
-
 # The user details
 public type NewUserDetails record {
     # Deprecated, do not use.
@@ -11979,6 +11972,14 @@ public type NewUserDetails record {
     # The URL of the user.
     string self?;
 };
+
+# The scope of the workflow
+public type WorkflowScope record {|
+    # Project ID details
+    ProjectId? project?;
+    # The scope of the workflow. `GLOBAL` for company-managed projects and `PROJECT` for team-managed projects
+    "PROJECT"|"GLOBAL" 'type?;
+|};
 
 # Details of a field configuration scheme
 public type FieldConfigurationScheme record {|
@@ -12122,6 +12123,12 @@ public type StatusProjectUsage record {|
     string id?;
 |};
 
+# Represents the Queries record for the operation: getRemoteIssueLinks
+public type GetRemoteIssueLinksQueries record {
+    # The global ID of the remote issue link
+    string globalId?;
+};
+
 # Details of the workflow and its transition rules
 public type WorkflowRulesSearch record {
     # Use expand to include additional information in the response. This parameter accepts `transition` which, for each rule, returns information about the transition the rule is assigned to
@@ -12131,12 +12138,6 @@ public type WorkflowRulesSearch record {
     string[] ruleIds;
     # The workflow ID
     string workflowEntityId;
-};
-
-# Represents the Queries record for the operation: getRemoteIssueLinks
-public type GetRemoteIssueLinksQueries record {
-    # The global ID of the remote issue link
-    string globalId?;
 };
 
 # A log of changes made to issue fields. Changelogs related to workflow associations are currently being deprecated
@@ -12337,6 +12338,10 @@ public type JiraSingleLineTextField record {|
     string fieldId;
 |};
 
+public type JiraPriorityField record {|
+    string priorityId;
+|};
+
 # Details of issue history metadata
 public type HistoryMetadata record {
     # The activity described in the history record.
@@ -12363,16 +12368,6 @@ public type HistoryMetadata record {
     string 'type?;
 };
 
-# A page of failed webhooks
-public type FailedWebhooks record {|
-    # The URL to the next page of results. Present only if the request returned at least one result.The next page may be empty at the time of receiving the response, but new failed webhooks may appear in time. You can save the URL to the next page and query for new results periodically (for example, every hour)
-    string next?;
-    # The maximum number of items on the page. If the list of values is shorter than this number, then there are no more pages
-    int:Signed32 maxResults;
-    # The list of webhooks
-    FailedWebhook[] values;
-|};
-
 # Details of a request to bulk edit shareable entity
 public type BulkEditShareableEntityResponse record {|
     # The mapping dashboard id to errors if any
@@ -12381,8 +12376,14 @@ public type BulkEditShareableEntityResponse record {|
     "changeOwner"|"changePermission"|"addPermission"|"removePermission" action;
 |};
 
-public type JiraPriorityField record {|
-    string priorityId;
+# A page of failed webhooks
+public type FailedWebhooks record {|
+    # The URL to the next page of results. Present only if the request returned at least one result.The next page may be empty at the time of receiving the response, but new failed webhooks may appear in time. You can save the URL to the next page and query for new results periodically (for example, every hour)
+    string next?;
+    # The maximum number of items on the page. If the list of values is shorter than this number, then there are no more pages
+    int:Signed32 maxResults;
+    # The list of webhooks
+    FailedWebhook[] values;
 |};
 
 public type ListWrapperCallbackApplicationRole record {|
@@ -12453,6 +12454,12 @@ public type CustomFieldValueUpdateDetails record {|
     CustomFieldValueUpdate[] updates?;
 |};
 
+# Result of updating JQL Function precomputations
+public type JqlFunctionPrecomputationUpdateResponse record {|
+    # List of precomputations that were not found and skipped. Only returned if the request passed skipNotFoundPrecomputations=true
+    string[] notFoundPrecomputationIDs?;
+|};
+
 # Details of a screen scheme
 public type UpdateScreenSchemeDetails record {|
     # The IDs of the screens for the screen types of the screen scheme. Only screens used in classic projects are accepted
@@ -12463,18 +12470,6 @@ public type UpdateScreenSchemeDetails record {|
     string description?;
 |};
 
-# Result of updating JQL Function precomputations
-public type JqlFunctionPrecomputationUpdateResponse record {|
-    # List of precomputations that were not found and skipped. Only returned if the request passed skipNotFoundPrecomputations=true
-    string[] notFoundPrecomputationIDs?;
-|};
-
-# A container for the watch status of a list of issues
-public type BulkIssueIsWatching record {|
-    # The map of issue ID to boolean watch status
-    record {|boolean...;|} issuesIsWatching?;
-|};
-
 # The default value for a Date custom field
 public type CustomFieldContextDefaultValueDate record {
     # The default date in ISO format. Ignored if `useCurrent` is true
@@ -12483,6 +12478,12 @@ public type CustomFieldContextDefaultValueDate record {
     boolean useCurrent = false;
     string 'type;
 };
+
+# A container for the watch status of a list of issues
+public type BulkIssueIsWatching record {|
+    # The map of issue ID to boolean watch status
+    record {|boolean...;|} issuesIsWatching?;
+|};
 
 # Precomputation id and its new value
 public type JqlFunctionPrecomputationUpdateBean record {|
@@ -12562,6 +12563,19 @@ public type CustomFieldContextDefaultValueDateTime record {
     string 'type;
 };
 
+# Represents the Queries record for the operation: getAllDashboards
+public type GetAllDashboardsQueries record {
+    # The filter applied to the list of dashboards. Valid values are:
+    # 
+    #  *  `favourite` Returns dashboards the user has marked as favorite.
+    #  *  `my` Returns dashboards owned by the user
+    "my"|"favourite" filter?;
+    # The maximum number of items to return per page
+    int:Signed32 maxResults = 20;
+    # The index of the first item to return in a page of results (page offset)
+    int:Signed32 startAt = 0;
+};
+
 # Various counts of issues within a version
 public type VersionIssueCounts record {|
     # Count of issues where a version custom field is set to the version
@@ -12575,19 +12589,6 @@ public type VersionIssueCounts record {|
     # The URL of these count details
     string self?;
 |};
-
-# Represents the Queries record for the operation: getAllDashboards
-public type GetAllDashboardsQueries record {
-    # The filter applied to the list of dashboards. Valid values are:
-    # 
-    #  *  `favourite` Returns dashboards the user has marked as favorite.
-    #  *  `my` Returns dashboards owned by the user
-    "my"|"favourite" filter?;
-    # The maximum number of items to return per page
-    int:Signed32 maxResults = 20;
-    # The index of the first item to return in a page of results (page offset)
-    int:Signed32 startAt = 0;
-};
 
 # Describes the error that occurred when retrieving data for a particular issue
 public type IssueError record {|
@@ -12607,12 +12608,6 @@ public type BulkProjectPermissions record {|
     int[] issues?;
 |};
 
-# The ID of an issue type screen scheme
-public type IssueTypeScreenSchemeId record {|
-    # The ID of the issue type screen scheme
-    string id;
-|};
-
 public type Resource record {|
     boolean readable?;
     record {byte[] fileContent; string fileName;} file?;
@@ -12622,6 +12617,21 @@ public type Resource record {|
     string uri?;
     boolean open?;
     string url?;
+|};
+
+# The ID of an issue type screen scheme
+public type IssueTypeScreenSchemeId record {|
+    # The ID of the issue type screen scheme
+    string id;
+|};
+
+# Add or clear a single select field:
+# 
+#  *  To add, specify the option with an `optionId`.
+#  *  To clear, pass an option with `optionId` as `-1`
+public type JiraSingleSelectField record {|
+    string fieldId;
+    JiraSelectedOptionField option;
 |};
 
 # Represents the Queries record for the operation: bulkGetUsers
@@ -12637,15 +12647,6 @@ public type BulkGetUsersQueries record {
     # This parameter is no longer available and will be removed from the documentation soon. See the [deprecation notice](https://developer.atlassian.com/cloud/jira/platform/deprecation-notice-user-privacy-api-migration-guide/) for details
     string[] username?;
 };
-
-# Add or clear a single select field:
-# 
-#  *  To add, specify the option with an `optionId`.
-#  *  To clear, pass an option with `optionId` as `-1`
-public type JiraSingleSelectField record {|
-    string fieldId;
-    JiraSelectedOptionField option;
-|};
 
 # A JSON object with custom content
 public type JsonContextVariable record {
@@ -12672,6 +12673,12 @@ public type UpdateIssueSecuritySchemeRequestBean record {|
     string description?;
 |};
 
+# The JQL specifying the issues available in the evaluated Jira expression under the `issues` context variable
+public type JexpIssues record {|
+    # The JQL query that specifies the set of issues available in the Jira expression
+    JexpJqlIssues jql?;
+|};
+
 # The payload for creating a security scheme. See https://support.atlassian.com/jira-cloud-administration/docs/configure-issue-security-schemes/
 public type SecuritySchemePayload record {|
     # The name of the security scheme
@@ -12682,12 +12689,6 @@ public type SecuritySchemePayload record {|
     SecurityLevelPayload[] securityLevels?;
     # Every project-created entity has an ID that must be unique within the scope of the project creation. PCRI (Project Create Resource Identifier) is a standard format for creating IDs and references to other project entities. PCRI format is defined as follows: pcri:\[entityType\]:\[type\]:\[entityId\] entityType - the type of an entity, e.g. status, role, workflow type - PCRI type, either `id` - The ID of an entity that already exists in the target site, or `ref` - A unique reference to an entity that is being created entityId - entity identifier, if type is `id` - must be an existing entity ID that exists in the Jira site, if `ref` - must be unique across all entities in the scope of this project template creation
     ProjectCreateResourceIdentifier pcri?;
-|};
-
-# The JQL specifying the issues available in the evaluated Jira expression under the `issues` context variable
-public type JexpIssues record {|
-    # The JQL query that specifies the set of issues available in the Jira expression
-    JexpJqlIssues jql?;
 |};
 
 public type Errors record {|
@@ -12947,15 +12948,6 @@ public type ProjectRoleDetails record {|
     string translatedName?;
 |};
 
-# Represents the Queries record for the operation: resetUserColumns
-public type ResetUserColumnsQueries record {
-    # The account ID of the user, which uniquely identifies the user across all Atlassian products. For example, *5b10ac8d82e05b22cc7d4ef5*
-    @constraint:String {maxLength: 128}
-    string accountId?;
-    # This parameter is no longer available. See the [deprecation notice](https://developer.atlassian.com/cloud/jira/platform/deprecation-notice-user-privacy-api-migration-guide/) for details
-    string username?;
-};
-
 public type IssueBulkEditField record {|
     # Indicates whether the field is mandatory for the operation
     boolean isRequired?;
@@ -12976,6 +12968,15 @@ public type IssueBulkEditField record {|
     # A message indicating why the field is unavailable for editing
     string unavailableMessage?;
 |};
+
+# Represents the Queries record for the operation: resetUserColumns
+public type ResetUserColumnsQueries record {
+    # The account ID of the user, which uniquely identifies the user across all Atlassian products. For example, *5b10ac8d82e05b22cc7d4ef5*
+    @constraint:String {maxLength: 128}
+    string accountId?;
+    # This parameter is no longer available. See the [deprecation notice](https://developer.atlassian.com/cloud/jira/platform/deprecation-notice-user-privacy-api-migration-guide/) for details
+    string username?;
+};
 
 # Represents the Queries record for the operation: findUsersForPicker
 public type FindUsersForPickerQueries record {
