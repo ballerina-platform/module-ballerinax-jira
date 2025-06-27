@@ -21,14 +21,14 @@ import ballerina/log;
 listener http:Listener httpListener = new (9090);
 
 http:Service mockService = service object {
-    resource function get myself() returns User|error {
+    resource function get api/'3/myself() returns User|error {
         User user = {
             accountId: "12345"
         };
         return user;
     }
 
-    resource function post issue() returns CreatedIssue|error {
+    resource function post api/'3/issue() returns CreatedIssue|error {
         CreatedIssue issue = {
             id: "12345"
         };
@@ -36,7 +36,7 @@ http:Service mockService = service object {
         return issue;
     }
 
-    resource function get issue/[string projectKey]() returns IssueBean|error {
+    resource function get api/'3/issue/[string projectKey]() returns IssueBean|error {
         IssueBean response = {
             id: "12345",
             'key: "Test_Issue"
@@ -44,18 +44,18 @@ http:Service mockService = service object {
         return response;
     }
 
-    resource function put issue/[string id]() returns json|error {
+    resource function put api/'3/issue/[string id]() returns json|error {
         json response = {
             id: "12345"
         };
         return response;
     }
 
-    resource function delete issue/[string id]() returns error? {
+    resource function delete api/'3/issue/[string id]() returns error? {
         return;
     }
 
-    resource function post project() returns ProjectIdentifiers|error {
+    resource function post api/'3/project() returns ProjectIdentifiers|error {
         ProjectIdentifiers response = {
             id: 121231432432,
             'key: "TP1",
@@ -64,14 +64,14 @@ http:Service mockService = service object {
         return response;
     }
 
-    resource function post project/[string projectId]/role/[int roleId](@http:Payload ActorsMap payload) returns ProjectRole|error {
+    resource function post api/'3/project/[string projectId]/role/[int roleId](@http:Payload ActorsMap payload) returns ProjectRole|error {
         ProjectRole response = {
             id: 5555555555
         };
         return response;
     }
 
-    resource function delete project/[string id](http:Request req) returns error? {
+    resource function delete api/'3/project/[string id](http:Request req) returns error? {
         var authHeaderResult = check req.getHeader("Authorization");
         if authHeaderResult is string {
             io:println("Authorization header: ", authHeaderResult);

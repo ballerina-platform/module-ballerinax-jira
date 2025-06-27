@@ -76,7 +76,7 @@ jira:ConnectionConfig config = {
     }        
 };
 
-final jira:Client jiraClient = check new(config,<"your-organization-id.atlassian.net/rest/api/3">);
+final jira:Client jiraClient = check new(config,<"your-organization-id.atlassian.net/rest>">);
 ```
 
 ### Step 3: Invoke the connector operation
@@ -85,7 +85,7 @@ final jira:Client jiraClient = check new(config,<"your-organization-id.atlassian
 
 ```ballerina
 public function main() returns error? {
-    jira:User user = check jiraClient->/myself;
+    jira:User user = check jiraClient->/api/'3/myself;
 }
 ```
 

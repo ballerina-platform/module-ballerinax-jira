@@ -21,7 +21,7 @@ configurable string username = "user";
 configurable string password = "test";
 configurable string domain = "";
 
-final string serviceUrl = isLiveServer ? "https://" + domain + ".atlassian.net/rest/api/3" : "http://localhost:9090";
+final string serviceUrl = isLiveServer ? "https://" + domain + ".atlassian.net/rest" : "http://localhost:9090";
 
 isolated string? issueId = ();
 isolated string? profileId = ();
@@ -38,7 +38,7 @@ final Client jiraClient = check new (config, serviceUrl);
 
 @test:Config {}
 isolated function testGetUser() returns error? {
-    User user = check jiraClient->/myself;
+    User user = check jiraClient->/api/'3/myself;
     if user.accountId is string {
         lock {
             profileId = <string>user.accountId;
@@ -66,7 +66,7 @@ isolated function testCreateProject() returns error? {
         projectTypeKey: "business",
         leadAccountId: accountId
     };
-    ProjectIdentifiers response = check jiraClient->/project.post(payload);
+    ProjectIdentifiers response = check jiraClient->/api/'3/project.post(payload);
     test:assertNotEquals(response.id, "");
 }
 
@@ -87,7 +87,7 @@ isolated function testCreateIssue() returns error? {
             "issuetype": {"name": "Task"}
         }
     };
-    CreatedIssue response = check jiraClient->/issue.post(payload);
+    CreatedIssue response = check jiraClient->/api/'3/issue.post(payload);
     if response.id is string {
         lock {
             issueId = <string>response.id;
@@ -109,7 +109,7 @@ isolated function testGetIssue() returns error? {
     GetIssueQueries queries = {
         fields: ["summery", "description", "status", "created", "project", "comment"]
     };
-    IssueBean issue = check jiraClient->/issue/[id].get({}, queries);
+    IssueBean issue = check jiraClient->/api/'3/issue/[id].get({}, queries);
     test:assertNotEquals(issue.key, ());
 }
 
@@ -129,7 +129,7 @@ isolated function testAddActorsToProject() returns error? {
     ActorsMap payload = {
         user: [accountId]
     };
-    ProjectRole role = check jiraClient->/project/[prokey]/role/[10002].post(payload);
+    ProjectRole role = check jiraClient->/api/'3/project/[prokey]/role/[10002].post(payload);
     test:assertNotEquals(role.id, ());
 }
 
@@ -145,7 +145,7 @@ isolated function testDeleteIssue() returns error? {
     DeleteIssueQueries queries = {
         deleteSubtasks: "true"
     };
-    check jiraClient->/issue/[id].delete({}, queries);
+    check jiraClient->/api/'3/issue/[id].delete({}, queries);
     test:assertTrue(true, msg = "Issue deleted successfully.");
 }
 
@@ -164,7 +164,7 @@ isolated function testUpdateIssue() returns error? {
             "description": [{set: "updated description"}]
         }
     };
-    json|error response = jiraClient->/issue/[id].put(payload);
+    json|error response = jiraClient->/api/'3/issue/[id].put(payload);
 
     if (response is json) {
         test:assertNotEquals(response, ());
@@ -183,6 +183,6 @@ isolated function testDeleteProject() returns error? {
     DeleteProjectQueries queries = {
         enableUndo: false
     };
-    check jiraClient->/project/[prokey].delete({}, queries);
+    check jiraClient->/api/'3/project/[prokey].delete({}, queries);
     test:assertTrue(true, msg = "Project deleted successfully.");
 }

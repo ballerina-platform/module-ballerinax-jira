@@ -29,14 +29,13 @@ jira:ConnectionConfig config = {
     }
 };
 
-string serviceUrl = "https://" + domain + ".atlassian.net/rest/api/3";
+string serviceUrl = "https://" + domain + ".atlassian.net/rest";
 
 jira:Client jiraClient = check new (config, serviceUrl);
 
 public function main() returns error? {
-
-    jira:User user = check jiraClient->/myself;
-
+    
+    jira:User user = check jiraClient->/api/'3/myself;
     string id = check user.accountId.ensureType();
     io:println(`User id retrieved: ${id}`);
 
@@ -65,7 +64,7 @@ public function main() returns error? {
         }
     };
 
-    jira:CreatedIssue issue = check jiraClient->/issue.post(issuePayload);
+    jira:CreatedIssue issue = check jiraClient->/api/'3/issue.post(issuePayload);
     io:println(`New issue added: ${issue.id}`);
 
     string issueKey = check issue.key.ensureType();
@@ -92,6 +91,6 @@ public function main() returns error? {
         }
     };
 
-    jira:Comment comment = check jiraClient->/issue/[issueKey]/comment.post(commentPayload);
+    jira:Comment comment = check jiraClient->/api/'3/issue/[issueKey]/comment.post(commentPayload);
     io:println(`comment added: ${comment.id}`);
 }
