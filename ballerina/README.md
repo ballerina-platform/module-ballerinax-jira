@@ -94,5 +94,5 @@ bal run
 
 The `Jira` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/module-ballerinax-jira/tree/main/examples/), covering the following use cases:
 
-1. [Create Project and Issue](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-jira/main/examples/create_project_and_issue/)
-2. [Create Issue and Add Comment](https://raw.githubusercontent.com/ballerina-platform/module-ballerinax-jira/main/examples/create_issue_and_add_comment/)
+1. [Create Project and Issue](https://github.com/module-ballerinax-jira/tree/main/examples/create_project_and_issue/)
+2. [Create Issue and Add Comment](https://github.com/module-ballerinax-jira/tree/main/examples/create_issue_and_add_comment/)
