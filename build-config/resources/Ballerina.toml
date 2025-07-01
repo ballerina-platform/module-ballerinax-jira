@@ -5,7 +5,7 @@ name = "jira"
 version = "@toml.version@"
 license = ["Apache-2.0"]
 authors = ["Ballerina"]
-keywords = ["Product","Project Management","Cost","Freemium"] 
+keywords = ["Jira", "Productivity", "Project Management", "Cost/Freemium"] 
 icon = "icon.png" 
 repository = "https://github.com/ballerina-platform/module-ballerinax-jira"
 
