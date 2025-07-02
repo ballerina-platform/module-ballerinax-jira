@@ -21,7 +21,7 @@ configurable string username = "user";
 configurable string password = "test";
 configurable string domain = "";
 
-final string serviceUrl = isLiveServer ? "https://" + domain + ".atlassian.net/rest" : "http://localhost:9090";
+final string serviceUrl = isLiveServer ? string `https://${domain}.atlassian.net/rest` : "http://localhost:9090";
 
 isolated string? issueId = ();
 isolated string? profileId = ();
@@ -166,7 +166,7 @@ isolated function testUpdateIssue() returns error? {
     };
     json|error response = jiraClient->/api/'3/issue/[id].put(payload);
 
-    if (response is json) {
+    if response is json {
         test:assertNotEquals(response, ());
     }
 }

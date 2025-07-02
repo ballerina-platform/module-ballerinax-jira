@@ -18,9 +18,9 @@ import ballerinax/jira;
 import ballerina/io;
 
 configurable string password = "test-token";
-configurable string username = "test-user";
+configurable string username = "test-username";
 configurable string domain = "test-domain";
-configurable string projectKey = "PID205";
+configurable string projectKey = "PID0023";
 
 jira:ConnectionConfig config = {
     auth: {
@@ -29,7 +29,7 @@ jira:ConnectionConfig config = {
     }
 };
 
-string serviceUrl = "https://" + domain + ".atlassian.net/rest";
+string serviceUrl = string `https://${domain}.atlassian.net/rest`;
 
 jira:Client jiraClient = check new (config, serviceUrl);
 

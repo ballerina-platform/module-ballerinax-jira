@@ -67,7 +67,7 @@ jira:ConnectionConfig config = {
     auth: {
         username,
         password
-    }        
+    }
 };
 
 final jira:Client jiraClient = check new(config,<"your-organization-id.atlassian.net/rest">);
@@ -92,7 +92,7 @@ bal run
 
 ## Examples
 
-The `Jira` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/module-ballerinax-jira/tree/main/examples/), covering the following use cases:
+The `Jira` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/ballerina-platform/module-ballerinax-jira/tree/main/examples/), covering the following use cases:
 
-1. [Create Project and Issue](https://github.com/module-ballerinax-jira/tree/main/examples/create_project_and_issue/)
-2. [Create Issue and Add Comment](https://github.com/module-ballerinax-jira/tree/main/examples/create_issue_and_add_comment/)
+1. [**Create Project and Issue**](https://github.com/ballerina-platform/module-ballerinax-jira/tree/main/examples/create_project_and_issue/) - Creates a new Jira project and adds an issue to it.
+2. [**Create Issue and Add Comment**](https://github.com/ballerina-platform/module-ballerinax-jira/tree/main/examples/create_issue_and_add_comment/) - Creates a new issue in an existing Jira project and adds a comment to it.
