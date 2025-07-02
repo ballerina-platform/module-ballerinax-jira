@@ -21,7 +21,7 @@ configurable string username = "user";
 configurable string password = "test";
 configurable string domain = "";
 
-final string serviceUrl = isLiveServer ?string `https://${domain}.atlassian.net/rest` : "http://localhost:9090";
+final string serviceUrl = isLiveServer ? string `https://${domain}.atlassian.net/rest` : "http://localhost:9090";
 
 isolated string? issueId = ();
 isolated string? profileId = ();

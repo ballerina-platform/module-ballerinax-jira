@@ -29,12 +29,12 @@ jira:ConnectionConfig config = {
     }
 };
 
-string serviceUrl = "https://" + domain + ".atlassian.net/rest";
+string serviceUrl = string `https://${domain}.atlassian.net/rest`;
 
 jira:Client jiraClient = check new (config, serviceUrl);
 
 public function main() returns error? {
-    
+
     jira:User user = check jiraClient->/api/'3/myself;
     string id = check user.accountId.ensureType();
     io:println(`User id retrieved: ${id}`);
