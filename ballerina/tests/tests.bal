@@ -56,7 +56,6 @@ isolated function testCreateProject() returns error? {
     string accountId = "";
     lock {
         prokey = projectKey ?: "project key is null";
-
     }
     lock {
         accountId = profileId ?: "profile id is null";
